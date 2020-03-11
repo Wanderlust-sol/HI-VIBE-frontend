@@ -12,7 +12,7 @@ declare global {
 
 const { naver } = window;
 const Nav: React.FC = () => {
-  useEffect(CDM);
+  useEffect(CDM, []);
 
   function CDM() {
     Naver();
