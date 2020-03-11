@@ -4,7 +4,6 @@ import ThemeIcon from 'Img/themeIcon.png';
 // import StationComponent from 'Components/StationComponent';
 import StationItemBox from 'Components/StationItemBox';
 import ThemeListComponent from 'Components/ThemeListComponent';
-import { withRouter, Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 interface Props {
@@ -199,47 +198,7 @@ class DjStation extends Component<Props, IState> {
     );
   }
 }
-export default withRouter(DjStation);
-
-const TotalBackground = styled.div`
-  display: flex;
-  overflow-x: hidden;
-  ${({ theme }) => theme.media.desktop`
-    display: flex;
-    overflow-x: hidden;
-  `}
-`;
-const Nav = styled.div`
-  width: 100%;
-  height: 67px;
-  background-color: black;
-  position: fixed;
-  top: 0;
-  z-index: 10;
-
-  ${({ theme }) => theme.media.desktop`
-    background-color: black;
-    width: 225px;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-  `}
-`;
-const MainContainer = styled.div`
-  padding-bottom: 245px;
-  padding-top: 67px;
-  min-height: 600px;
-  background-color: #fbfbfb;
-  width: 100%;
-  /* height: 100vh; */
-  /* margin: 0 auto; */
-  ${({ theme }) => theme.media.desktop`
-    padding-bottom: 245px;
-    min-height: 600px;
-    padding-left: 225px;
-    background-color: #fbfbfb;
-  `}
-`;
+export default DjStation;
 
 const MainContent = styled.div`
   margin: 0 auto;

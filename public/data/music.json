@@ -1,0 +1,40 @@
+{
+  "music": [
+    {
+      "id": 1,
+      "name": "WANNABE",
+      "artist_name": "ITZY(있지)",
+      "album_image": "https://musicmeta-phinf.pstatic.net/album/004/480/4480594.jpg?type=r100Fll&v=20200309220857"
+    },
+    {
+      "id": 2,
+      "name": "달라달라",
+      "artist_name": "ITZY(있지)",
+      "album_image": "https://musicmeta-phinf.pstatic.net/album/002/841/2841538.jpg?type=r100Fll&v=20200218132210"
+    },
+    {
+      "id": 3,
+      "name": "CHERRY",
+      "artist_name": "ITZY(있지)",
+      "album_image": "https://musicmeta-phinf.pstatic.net/album/003/132/3132878.jpg?type=r100Fll&v=20200218131711"
+    },
+    {
+      "id": 4,
+      "name": "THAT'S NO NO",
+      "artist_name": "ITZY(있지)",
+      "album_image": "https://musicmeta-phinf.pstatic.net/album/004/480/4480594.jpg?type=r100Fll&v=20200309220857"
+    },
+    {
+      "id": 5,
+      "name": "IT'z SUMMER",
+      "artist_name": "ITZY(있지)",
+      "album_image": "https://musicmeta-phinf.pstatic.net/album/003/132/3132878.jpg?type=r100Fll&v=20200218131711"
+    },
+    {
+      "id": 6,
+      "name": "WANT IT?",
+      "artist_name": "ITZY(있지)",
+      "album_image": "https://musicmeta-phinf.pstatic.net/album/002/841/2841538.jpg?type=r100Fll&v=20200218132210"
+    }
+  ]
+}

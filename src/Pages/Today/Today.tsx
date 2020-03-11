@@ -8,7 +8,7 @@ import Magazine2 from 'Components/TodayFolder/Magazine2';
 import News from 'Components/TodayFolder/News';
 import Download from 'Components/TodayFolder/Download';
 import Intro from 'Components/TodayFolder/Intro';
-import styled from 'styled-components';
+// import styled from 'styled-components';
 
 export default class Today extends Component {
   render(): JSX.Element {

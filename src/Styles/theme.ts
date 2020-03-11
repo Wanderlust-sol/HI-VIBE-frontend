@@ -28,7 +28,6 @@ Object.keys(sizes).reduce((acc: Media, label: string) => {
           }
         `;
       break;
-
     default:
       break;
   }
