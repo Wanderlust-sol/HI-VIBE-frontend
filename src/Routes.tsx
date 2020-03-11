@@ -6,6 +6,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 import Today from 'Pages/Today/Today';
+import DjStation from 'Pages/DjStation/DjStation';
 
 export default class Routes extends React.Component {
   render() {
@@ -13,6 +14,7 @@ export default class Routes extends React.Component {
       <Router>
         <Switch>
           <Route exact path="/" component={Today} />
+          <Route exact path="/dj_station" component={DjStation} />
           <Redirect to="/error" />
         </Switch>
       </Router>
