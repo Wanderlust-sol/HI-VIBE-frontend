@@ -118,7 +118,7 @@ const Nav: React.FC = () => {
         <MenuArea>
           <Ul>
             <List marginTop="0">
-              <TodayLink href="#">
+              <TodayLink href="/">
                 <TodayText>투데이</TodayText>
               </TodayLink>
             </List>
@@ -128,7 +128,7 @@ const Nav: React.FC = () => {
               </ChartLink>
             </List>
             <List>
-              <DjLink href="#">
+              <DjLink href="/dj_station">
                 <DefaultText>DJ 스테이션</DefaultText>
               </DjLink>
             </List>
