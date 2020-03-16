@@ -5,20 +5,16 @@ import baseStyled, {
 } from 'styled-components';
 
 const sizes: { [key: string]: number } = {
-  //   mobile: 320,
-  tablet: 768,
-  desktop: 1024,
+  desktop: 768,
 };
 
 type BackQuoteArgs = string[];
 
 interface Media {
-  tablet: (...args: BackQuoteArgs) => CSSProp | undefined;
   desktop: (...args: BackQuoteArgs) => CSSProp | undefined;
 }
 
 const media: Media = {
-  tablet: (...args: BackQuoteArgs) => undefined,
   desktop: (...args: BackQuoteArgs) => undefined,
 };
 
@@ -28,14 +24,6 @@ Object.keys(sizes).reduce((acc: Media, label: string) => {
       acc.desktop = (...args: BackQuoteArgs) =>
         css`
           @media only screen and (min-width: ${sizes.desktop}px) {
-            ${args}
-          }
-        `;
-      break;
-    case 'tablet':
-      acc.tablet = (...args: BackQuoteArgs) =>
-        css`
-          @media only screen and (max-width: ${sizes.desktop}px) and (min-width: ${sizes.tablet}px) {
             ${args}
           }
         `;

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import Layout from 'Components/Layout/Layout';
 
 export default class Today extends Component {
   render() {
-    return <div>hi</div>;
+    return <Layout>ghjugyh</Layout>;
   }
 }
