@@ -2,10 +2,10 @@ import React from 'react';
 import Nav from 'Components/Nav/Nav';
 import styled from 'styled-components';
 
-interface IProps {
+interface Props {
   children: React.ReactNode;
 }
-const Layout = ({ children }: IProps) => {
+const Layout = ({ children }: Props) => {
   return (
     <TotalBackground>
       <Nav />
@@ -36,7 +36,7 @@ const MainContainer = styled.div`
  margin-top:0;
  height: 100vh;
   color: black;
-  padding-bottom: 245px;
+
   min-height: 600px;
   padding-left: 225px;
   background-color: #fbfbfb;
