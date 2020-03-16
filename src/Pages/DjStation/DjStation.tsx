@@ -1,27 +1,121 @@
-import React, { Component } from 'react';
+import React, { Component, ReactNode } from 'react';
 import Layout from 'Components/Layout/Layout';
 import ThemeIcon from 'Img/themeIcon.png';
 // import StationComponent from 'Components/StationComponent';
+import StationItemBox from 'Components/StationItemBox';
+import ThemeListComponent from 'Components/ThemeListComponent';
+import { withRouter, Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-export default class DjStation extends Component {
-  //  constructor(props) {
-  //    super(props);
+interface Props {
+  location: any;
+  children: React.ReactNode;
+  num: number;
+  history: any;
+  id: number;
+}
+interface StationInfo {
+  station_id: number;
+  image: string;
+}
+interface ThemeList {
+  id: number;
+  name: string;
+  main_image: string;
+  creator: string;
+  changeThemeId: (id: number) => void;
+}
+interface IState {
+  data: Array<StationInfo>;
+  genre: Array<StationInfo>;
+  data2: Array<StationInfo>;
+  isModal: boolean;
+  setModal: boolean;
+  theme_list: Array<ThemeList>;
+  theme_id: number;
+}
 
-  //    this.state = {
-  //      imgArray: [],
-  //    };
-  //  }
-  //  componentDidMount() {
-  //    fetch("")
-  //    .then(res=> res.json();)
-  //    .then(res=>{
-  //        this.setState({
-  //            imgArray:res.imgArray
-  //        })
-  //    })
-  //  }
+class DjStation extends Component<Props, IState> {
+  constructor(props: any) {
+    super(props);
 
+    this.state = {
+      data: [],
+      genre: [],
+      data2: [],
+      isModal: false,
+      setModal: false,
+      theme_list: [],
+      theme_id: 1,
+    };
+  }
+  componentDidMount() {
+    this.getFirstPage();
+    this.genreStationFetch();
+    this.getModalFetch();
+  }
+  // 첫 번째 fetch
+  getFirstPage = () => {
+    // fetch('http://localhost:3000/data/djStationData.json')
+    fetch(`http://10.58.2.227:8000/music/station/theme${this.state.theme_id}`, {
+      method: 'GET',
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        this.setState(
+          {
+            data: res.theme_images,
+          },
+          () => {
+            console.log(this.state.data);
+          },
+        );
+      });
+  };
+  getModalFetch = () => {
+    fetch('http://10.58.2.227:8000/music/station/theme', {
+      method: 'GET',
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        this.setState({
+          theme_list: res.theme_list,
+        });
+      });
+  };
+  genreStationFetch = () => {
+    // fetch('http://localhost:3000/data/genreData.json')
+    fetch(`http://10.58.2.227:8000/music/station/theme30`, {
+      method: 'GET',
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        this.setState({
+          data2: res.theme_images,
+        });
+      });
+  };
+
+  setModal = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+    this.setState({
+      setModal: true,
+    });
+  };
+  onClose = (event: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
+    this.setState({
+      setModal: false,
+    });
+  };
+  changeThemeId = (id: number) => {
+    this.setState(
+      {
+        theme_id: id,
+      },
+      () => {
+        this.getFirstPage();
+      },
+    );
+  };
   render() {
     return (
       <Layout>
@@ -29,32 +123,130 @@ export default class DjStation extends Component {
           {/* 메인 글씨 랑 테마 버튼 시작************** */}
           <MainText>
             DJ 스테이션{' '}
-            <ThemeBox>
+            <ThemeBox onClick={this.setModal}>
               <ThemeIconBox src={ThemeIcon}></ThemeIconBox>테마
             </ThemeBox>
           </MainText>
           {/* 메인 글씨랑 테마 버튼 끝 ******************* */}
+          {!this.state.setModal ? null : (
+            <ModalDiv onClick={this.onClose}>
+              <ModalDialogDiv>
+                <ModalHeaderDiv>
+                  <ModalTitle>스테이션 테마</ModalTitle>
+                  <ModalClose onClick={this.onClose}>
+                    <CloseImg src="https://image.flaticon.com/icons/svg/1828/1828528.svg" />
+                  </ModalClose>
+                </ModalHeaderDiv>
+                <ModalBody>
+                  <ModalContent>
+                    {this.state.theme_list[0] &&
+                      this.state.theme_list.map((list: ThemeList) => (
+                        <ThemeListComponent
+                          id={list.id}
+                          name={list.name}
+                          main_image={list.main_image}
+                          creator={list.creator}
+                          changeThemeId={this.changeThemeId}
+                        />
+                      ))}
+                  </ModalContent>
+                </ModalBody>
+              </ModalDialogDiv>
+            </ModalDiv>
+          )}
+          {/* **************** 테마 선택 모달 끝********************** */}
+
           {/* 느낌 별 스테이션 시작 *******************8 */}
           <StationComponentContainer>
-            <StationComponentContainerText>
-              느낌별 스테이션
-            </StationComponentContainerText>
-            <StationWrap>
-              <StaionWrapUl></StaionWrapUl>
-            </StationWrap>
+            <StationUlParent>
+              <StationComponentContainerText>
+                느낌별 스테이션
+              </StationComponentContainerText>
+              <DivForUl>
+                <StaionWrapUl>
+                  {this.state.data[0] &&
+                    this.state.data.map((station: StationInfo) => (
+                      <StationItemBox imgUrl={station.image} />
+                    ))}
+                </StaionWrapUl>
+              </DivForUl>
+            </StationUlParent>
+            <GenreUlParent>
+              <GenreWrapUl></GenreWrapUl>
+            </GenreUlParent>
+          </StationComponentContainer>
+          {/* ************장르 스테이션 시작************************* */}
+          <StationComponentContainer>
+            <StationUlParent>
+              <StationComponentContainerText>
+                장르 스테이션
+              </StationComponentContainerText>
+              <DivForUl>
+                <StaionWrapUl>
+                  {this.state.data2[0] &&
+                    this.state.data2.map((station: StationInfo) => (
+                      <StationItemBox imgUrl={station.image} />
+                    ))}
+                </StaionWrapUl>
+              </DivForUl>
+            </StationUlParent>
+            <GenreUlParent>
+              <GenreWrapUl></GenreWrapUl>
+            </GenreUlParent>
           </StationComponentContainer>
         </MainContent>
       </Layout>
     );
   }
 }
+export default withRouter(DjStation);
+
+const TotalBackground = styled.div`
+  display: flex;
+  overflow-x: hidden;
+  ${({ theme }) => theme.media.desktop`
+    display: flex;
+    overflow-x: hidden;
+  `}
+`;
+const Nav = styled.div`
+  width: 100%;
+  height: 67px;
+  background-color: black;
+  position: fixed;
+  top: 0;
+  z-index: 10;
+
+  ${({ theme }) => theme.media.desktop`
+    background-color: black;
+    width: 225px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+  `}
+`;
+const MainContainer = styled.div`
+  padding-bottom: 245px;
+  padding-top: 67px;
+  min-height: 600px;
+  background-color: #fbfbfb;
+  width: 100%;
+  /* height: 100vh; */
+  /* margin: 0 auto; */
+  ${({ theme }) => theme.media.desktop`
+    padding-bottom: 245px;
+    min-height: 600px;
+    padding-left: 225px;
+    background-color: #fbfbfb;
+  `}
+`;
 
 const MainContent = styled.div`
-  margin: 0 43px;
+  margin: 0 auto;
   ${({ theme }) => theme.media.desktop`
-  padding-top : 20px;
-  margin : 0 43px;
-  width : 964px;
+  position: relative;
+    max-width: 964px;
+    margin: 0 auto;
 
   `}
 `;
@@ -68,6 +260,7 @@ const ThemeBox = styled.button`
   color: #232323;
   border: 1px solid #d7d7d7;
   border-radius: 4px;
+  cursor: pointer;
 `;
 
 const MainText = styled.div`
@@ -92,7 +285,8 @@ const ThemeIconBox = styled.img`
   vertical-align: middle;
 `;
 const StationComponentContainer = styled.div`
-  padding: 18px 0 39px;
+  position: relative;
+  padding: 18px 0 50px;
 `;
 const StationComponentContainerText = styled.div`
   display: block;
@@ -102,11 +296,17 @@ const StationComponentContainerText = styled.div`
   margin-inline-start: 0px;
   margin-inline-end: 0px;
   font-weight: bold;
+  padding-left: 36px;
 `;
-const StationWrap = styled.div`
-  margin-right: -16px;
+
+const StationUlParent = styled.div`
+  position: relative;
+  display: inline-block;
+  padding: 18px 0 36px;
+  border-bottom: 1px solid lightgray;
 `;
-const StaionWrapUl = styled.ul`
+const DivForUl = styled.div`
+  padding: 0;
   display: block;
   list-style-type: disc;
   margin-block-start: 1em;
@@ -114,4 +314,89 @@ const StaionWrapUl = styled.ul`
   margin-inline-start: 0px;
   margin-inline-end: 0px;
   padding-inline-start: 40px;
+  margin-right: -16px;
+`;
+const StaionWrapUl = styled.ul``;
+
+const GenreUlParent = styled.div``;
+
+const GenreWrapUl = styled.ul``;
+const ModalDiv = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  animation-name: appear;
+  animation-duration: 300ms;
+`;
+const ModalDialogDiv = styled.div`
+  width: 100%;
+  max-width: 550px;
+  background: white;
+  position: relative;
+  margin: 0 20px;
+  max-height: calc(100vh - 40px);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  animation-name: animatetop;
+  animation-duration: 0.5s;
+  animation-name: slide-in;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  max-height: 550px;
+
+  position: relative;
+  margin: 50px 0;
+  vertical-align: middle;
+  border-radius: 4px;
+  background-color: #fff;
+`;
+const ModalHeaderDiv = styled.div`
+  /* position: relative; */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 10px;
+  /* border-bottom: 1px solid #dbdbdb; */
+  /* justify-content: space-between; */
+`;
+
+const ModalClose = styled.div`
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+  padding: 1rem;
+  /* margin: -1rem -1rem -1rem auto; */
+`;
+const CloseImg = styled.img`
+  width: 15px;
+  height: 15px;
+`;
+const ModalBody = styled.div`
+  overflow: auto;
+`;
+const ModalContent = styled.ul`
+  padding: 0 13px 0 30px;
+  margin-top: 10px;
+`;
+const ModalTitle = styled.div`
+  display: block;
+  font-size: 17px;
+  line-height: 21px;
+  font-weight: 500;
+  color: #232323;
+  margin-top: 14px;
 `;
