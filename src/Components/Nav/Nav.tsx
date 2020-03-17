@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router';
 // import Login from 'Utils/Login';
 import Icons from 'Img/vibe.svg';
@@ -11,7 +11,18 @@ declare global {
 }
 
 const { naver } = window;
+
+interface User {
+  nickname: string;
+  image: string;
+}
+
+interface Image {
+  url: string;
+}
+
 const Nav: React.FC = () => {
+  const [data, setData] = useState<User>({ nickname: '', image: '' });
   useEffect(CDM, []);
 
   function CDM() {
@@ -82,7 +93,8 @@ const Nav: React.FC = () => {
       })
         .then((res) => res.json())
         .then((res) => {
-          console.log(res);
+          localStorage.setItem('wtw-token', res.token);
+          setData(res.user);
         });
     }
   }
@@ -92,10 +104,16 @@ const Nav: React.FC = () => {
       <SearchLink href="#" />
       <MyMenu>
         <ProfileArea>
-          <LoginLink href="#">
-            <LoginText>로그인</LoginText>
-            <NaverLogin id="naverIdLogin"></NaverLogin>
-          </LoginLink>
+          {data.image ? (
+            <LoggedLink url={data.image}>
+              <LoginText>{data.nickname}</LoginText>
+            </LoggedLink>
+          ) : (
+            <LoginLink href="#">
+              <LoginText>로그인</LoginText>
+              <NaverLogin id="naverIdLogin"></NaverLogin>
+            </LoginLink>
+          )}
         </ProfileArea>
         <MenuArea>
           <Ul>
@@ -261,6 +279,27 @@ const LoginLink = styled.a`
   }
 `;
 
+const LoggedLink = styled.a`
+  line-height: 19px;
+  color: rgb(153, 153, 153);
+  padding: 11px 0;
+  display: block;
+  font-size: 15px;
+
+  ::before {
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+    margin: 0 10px 0 7px;
+    border-radius: 50%;
+    content: '';
+    background-image: url(${(props: Image) => props.url});
+    background-position: 50% 50%;
+    background-size: cover;
+    display: inline-block;
+  }
+`;
+
 const LoginText = styled.span`
   display: inline-block;
   vertical-align: middle;
@@ -269,9 +308,9 @@ const LoginText = styled.span`
 const NaverLogin = styled.div`
   width: 30px;
   height: 30px;
-  display: inline-block;
   vertical-align: middle;
-  margin-left: 65px;
+  float: right;
+  margin-right: 10px;
 `;
 
 const Ul = styled.ul`

@@ -13,6 +13,7 @@ const GlobalStyle = createGlobalStyle`
   a {
     color: inherit;
     text-decoration: none;
+    cursor: pointer;
   }
   input, button {
     background-color: transparent;

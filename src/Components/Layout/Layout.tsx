@@ -1,15 +1,18 @@
 import React from 'react';
 import Nav from 'Components/Nav/Nav';
+import Player from 'Components/Player/Player';
 import styled from 'styled-components';
 
 interface Props {
   children: React.ReactNode;
 }
+
 const Layout = ({ children }: Props) => {
   return (
     <TotalBackground>
       <Nav />
       <MainContainer>{children}</MainContainer>
+      <Player />
     </TotalBackground>
   );
 };
@@ -36,7 +39,6 @@ const MainContainer = styled.div`
  margin-top:0;
  height: 100vh;
   color: black;
-
   min-height: 600px;
   padding-left: 225px;
   background-color: #fbfbfb;
