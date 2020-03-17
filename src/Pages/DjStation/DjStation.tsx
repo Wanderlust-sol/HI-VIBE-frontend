@@ -1,9 +1,11 @@
 import React, { Component, ReactNode } from 'react';
 import Layout from 'Components/Layout/Layout';
 import ThemeIcon from 'Img/themeIcon.png';
+import Footer from 'Components/Footer/Footer';
 // import StationComponent from 'Components/StationComponent';
 import StationItemBox from 'Components/StationItemBox';
 import ThemeListComponent from 'Components/ThemeListComponent';
+
 import styled from 'styled-components';
 
 interface Props {
@@ -35,7 +37,7 @@ interface IState {
 }
 
 class DjStation extends Component<Props, IState> {
-  constructor(props: any) {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -139,13 +141,14 @@ class DjStation extends Component<Props, IState> {
                 <ModalBody>
                   <ModalContent>
                     {this.state.theme_list[0] &&
-                      this.state.theme_list.map((list: ThemeList) => (
+                      this.state.theme_list.map((list: ThemeList, index) => (
                         <ThemeListComponent
                           id={list.id}
                           name={list.name}
                           main_image={list.main_image}
                           creator={list.creator}
                           changeThemeId={this.changeThemeId}
+                          key={index}
                         />
                       ))}
                   </ModalContent>
@@ -164,8 +167,8 @@ class DjStation extends Component<Props, IState> {
               <DivForUl>
                 <StaionWrapUl>
                   {this.state.data[0] &&
-                    this.state.data.map((station: StationInfo) => (
-                      <StationItemBox imgUrl={station.image} />
+                    this.state.data.map((station: StationInfo, index) => (
+                      <StationItemBox imgUrl={station.image} key={index} />
                     ))}
                 </StaionWrapUl>
               </DivForUl>
@@ -176,24 +179,22 @@ class DjStation extends Component<Props, IState> {
           </StationComponentContainer>
           {/* ************장르 스테이션 시작************************* */}
           <StationComponentContainer>
-            <StationUlParent>
+            <StationUlParent2>
               <StationComponentContainerText>
                 장르 스테이션
               </StationComponentContainerText>
               <DivForUl>
                 <StaionWrapUl>
                   {this.state.data2[0] &&
-                    this.state.data2.map((station: StationInfo) => (
-                      <StationItemBox imgUrl={station.image} />
+                    this.state.data2.map((station: StationInfo, index) => (
+                      <StationItemBox imgUrl={station.image} key={index} />
                     ))}
                 </StaionWrapUl>
               </DivForUl>
-            </StationUlParent>
-            <GenreUlParent>
-              <GenreWrapUl></GenreWrapUl>
-            </GenreUlParent>
+            </StationUlParent2>
           </StationComponentContainer>
         </MainContent>
+        <Footer />
       </Layout>
     );
   }
@@ -263,6 +264,11 @@ const StationUlParent = styled.div`
   display: inline-block;
   padding: 18px 0 36px;
   border-bottom: 1px solid lightgray;
+`;
+const StationUlParent2 = styled.div`
+  position: relative;
+  display: inline-block;
+  padding: 18px 0 300px;
 `;
 const DivForUl = styled.div`
   padding: 0;
@@ -346,11 +352,9 @@ const CloseImg = styled.img`
 `;
 const ModalBody = styled.div`
   overflow: auto;
+  padding: 0 50 px 0 50px;
 `;
-const ModalContent = styled.ul`
-  padding: 0 13px 0 30px;
-  margin-top: 10px;
-`;
+const ModalContent = styled.ul``;
 const ModalTitle = styled.div`
   display: block;
   font-size: 17px;

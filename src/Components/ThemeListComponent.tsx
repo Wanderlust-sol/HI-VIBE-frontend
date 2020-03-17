@@ -1,13 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-interface IProps {
+interface Props {
   id: number;
   name: string;
   main_image: string;
   creator: string;
-  match?: any;
-  location?: any;
   changeThemeId: (id: number) => void;
 }
 interface StationInfo {
@@ -18,8 +16,8 @@ interface State {
   data: Array<StationInfo>;
 }
 
-class ThemeListComponent extends React.Component<IProps, State> {
-  constructor(props: IProps) {
+class ThemeListComponent extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -61,8 +59,9 @@ class ThemeListComponent extends React.Component<IProps, State> {
 export default ThemeListComponent;
 const ThemeBox = styled.li`
   float: left;
-  width: 180px;
+  width: 110px;
   padding: 25px 0 0 10px;
+  position: relative;
 `;
 const ThemeImg = styled.img`
   width: 100%;
