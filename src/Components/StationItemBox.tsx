@@ -1,33 +1,42 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { PlayButton, PauseButton } from 'Components/Buttons/PlayButton';
 
-interface IProps {
+interface Props {
   imgUrl: string;
 }
 
-export class StationItemBox extends Component<IProps, {}> {
-  constructor(props: any) {
+interface State {
+  isHovering: boolean;
+}
+
+export class StationItemBox extends Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
-      theme_images: [],
+      isHovering: false,
     };
   }
-  //   componentDidMount = () => {
-  //     fetch(
-  //       `10.58.2.227:8000/music/station theme_id==${this.props.match.params.themeId}`,
-  //     )
-  //       .then((res) => res.json())
-  //       .then((res) => {
-  //         this.setState({
-  //           theme_images: res.theme_images,
-  //         });
-  //       });
-  //   };
+
+  handleMouseHover = () => {
+    this.setState({
+      isHovering: !this.state.isHovering,
+    });
+  };
+
   render() {
     return (
-      <StationImg>
+      <StationImg
+        onMouseEnter={() => {
+          this.setState({ isHovering: true });
+        }}
+        onMouseLeave={() => {
+          this.setState({ isHovering: false });
+        }}
+      >
         <ItemImg src={this.props.imgUrl} alt="" />
+        <PlayButton style={{ opacity: this.state.isHovering ? 1 : 0 }} />
       </StationImg>
     );
   }
@@ -35,10 +44,11 @@ export class StationItemBox extends Component<IProps, {}> {
 
 export default StationItemBox;
 const StationImg = styled.li`
+  position: relative;
   float: left;
   height: 180px;
   width: 180px;
-  padding: 0 16px 16px 0;
+  margin: 0 16px 16px 0;
   vertical-align: top;
 `;
 const ItemImg = styled.img``;
