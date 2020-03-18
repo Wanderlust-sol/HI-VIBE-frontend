@@ -55,7 +55,7 @@ const Player: React.FC = (props) => {
       artist_name: 'ITZY(있지)',
       album_image:
         'https://musicmeta-phinf.pstatic.net/album/004/480/4480594.jpg?type=r100Fll&v=20200309220857',
-      src: 'Audio/ES_Future Vibes - Qeeo.mp3',
+      src: 'Audio/몽니 - 소년이 어른이 되어.mp3',
     },
     {
       id: 2,
@@ -71,7 +71,7 @@ const Player: React.FC = (props) => {
       artist_name: 'ITZY(있지)',
       album_image:
         'https://musicmeta-phinf.pstatic.net/album/003/132/3132878.jpg?type=r100Fll&v=20200218131711',
-      src: 'Audio/ES_Future Vibes - Qeeo.mp3',
+      src: 'Audio/daybreak.mp3',
     },
     {
       id: 4,
@@ -114,12 +114,16 @@ const Player: React.FC = (props) => {
   const [loop, setLoop] = useState<boolean>(false);
   const [shuffle, setShuffle] = useState<boolean>(false);
   const volumeRef = useRef<any>(null);
-  const [history, setHistory] = useState<number[]>([]);
+  const [history, setHistory] = useState<any>([]);
   const player = new Audio();
   const playerRef = useRef(player);
   const prevPlayer = playerRef.current;
   let newArr = [...history, currentIndex];
 
+  console.log('player', player.src, 'prev', prevPlayer.src);
+  console.log('currentIndex', currentIndex);
+  // console.log(history);
+  // console.log('shuffle', shuffle, 'loop', loop);
   // console.log('prevPlayer', playerRef);
 
   const startPlayer = () => {
@@ -128,6 +132,11 @@ const Player: React.FC = (props) => {
     setCurrentTitle(currentSong.name);
     setCurrentArtist(currentSong.artist_name);
     setCurrentImage(currentSong.album_image);
+    if (isplaying) {
+      setIsplaying(true);
+      player.play();
+    }
+
     // setIsplaying(true);
     // prevPlayer.play();
   };
@@ -144,20 +153,18 @@ const Player: React.FC = (props) => {
 
   const playNext = () => {
     if (shuffle) {
-      // history = [a,b,c]
       setHistory(newArr);
       setCurrentIndex(Math.floor(Math.random() * state.length));
+      console.log(Math.floor(Math.random() * state.length));
       startPlayer();
     } else {
       if (currentIndex === state.length - 1) {
         prevPlayer.pause();
         setIsplaying(false);
       } else {
-        prevPlayer.pause();
-        setIsplaying(false);
-        // history.push(currentIndex);
+        // prevPlayer.pause();
+        // setIsplaying(false);
         setHistory(newArr);
-        console.log('history', history);
         setCurrentIndex(currentIndex + 1);
         startPlayer();
         // prevPlayer.play();
@@ -167,8 +174,7 @@ const Player: React.FC = (props) => {
 
   const playPrev = () => {
     if (history[history.length - 1] >= 0) {
-      console.log(history);
-      // setCurrentIndex(history.pop());
+      setCurrentIndex(history.pop());
       startPlayer();
     } else {
       prevPlayer.pause();
@@ -269,6 +275,9 @@ const Player: React.FC = (props) => {
   // }, []);
   useEffect(() => {
     musicPlayer();
+    setProgressbar(0);
+    setCurrentTime('00:00');
+    setTotaltime('00:00');
     playerRef.current = player;
   }, [currentIndex]);
 
@@ -326,7 +335,7 @@ const Player: React.FC = (props) => {
         <Modal />
         <CoverSection>
           <ThumbCover>
-            <CoverImage src="https://musicmeta-phinf.pstatic.net/album/004/480/4480594.jpg?type=r720Fll&v=20200309220857" />
+            <CoverImage src={currentImage} />
           </ThumbCover>
         </CoverSection>
         <ListSection>
@@ -549,7 +558,7 @@ const BtnShuffle = styled.a`
 
   ::after {
     background-position: ${(props: Shuffle) =>
-      !props.shuffle ? '-721px -591px' : '-450px -681px'};
+      props.shuffle ? '-721px -591px' : '-450px -681px'};
     width: 22px;
     height: 22px;
     margin-top: 17px;
@@ -573,7 +582,7 @@ const BtnRepeat = styled.a`
 
   ::after {
     background-position: ${(props: Loop) =>
-      !props.loop ? '-570px -681px' : '-600px -681px'};
+      props.loop ? '-570px -681px' : '-600px -681px'};
     width: 22px;
     height: 22px;
     margin-top: 17px;
