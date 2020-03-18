@@ -48,7 +48,8 @@ export default class News extends Component {
 }
 
 const Container = styled.div`
-  padding: 0 10px 45px;
+  padding: 35px 10px 45px;
+  margin: 0 auto;
 `;
 
 const BorderTop = styled.div`

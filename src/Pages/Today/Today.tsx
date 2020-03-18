@@ -8,23 +8,41 @@ import Magazine2 from 'Components/TodayFolder/Magazine2';
 import News from 'Components/TodayFolder/News';
 import Download from 'Components/TodayFolder/Download';
 import Intro from 'Components/TodayFolder/Intro';
-// import styled from 'styled-components';
+import styled from 'styled-components';
 
 export default class Today extends Component {
   render(): JSX.Element {
     return (
       <Layout>
-        <div style={{ overflowX: 'hidden' }}>
+        <Container>
           <Banner />
-          <Headline />
+          <div style={{ maxWidth: 1160, margin: '0 auto' }}>
+            <Headline />
+          </div>
           <Banner2 />
-          <Magazine />
-          <News />
-          <Magazine2 />
-          <Download />
+          <div style={{ maxWidth: 1160, margin: '0 auto' }}>
+            <SectionWrapper>
+              <Magazine />
+              <News />
+              <Magazine2 />
+            </SectionWrapper>
+            <Download />
+          </div>
+
           <Intro />
-        </div>
+        </Container>
       </Layout>
     );
   }
 }
+
+const Container = styled.div`
+  width: 100vw;
+  /* width: auto; */
+  overflow-x: hidden;
+  background-color: #f2f2f2;
+`;
+
+const SectionWrapper = styled.div`
+  margin: 0 30px;
+`;

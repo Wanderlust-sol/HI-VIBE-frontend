@@ -9,7 +9,7 @@ import Today from 'Pages/Today/Today';
 import DjStation from 'Pages/DjStation/DjStation';
 
 export default class Routes extends React.Component {
-  render() {
+  render(): JSX.Element {
     return (
       <Router>
         <Switch>

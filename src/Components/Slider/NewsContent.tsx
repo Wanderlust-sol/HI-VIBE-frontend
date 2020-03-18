@@ -29,14 +29,14 @@ export default class NewsContent extends Component<Props> {
   render(): JSX.Element {
     return (
       <>
-        <div style={{ margin: 10 }}>
+        <div style={{ margin: '0 10px' }}>
           <div
             onMouseEnter={this.handleMouseHover}
             onMouseLeave={this.handleMouseHover}
             style={{
               position: 'relative',
               overflow: 'hidden',
-              marginTop: -105,
+              marginTop: -95,
             }}
           >
             <Overlay
@@ -74,9 +74,9 @@ interface Filter {
 
 const Overlay = styled.div`
   transition: filter 0.5s ease-in;
-
   height: 310px;
-  background-position-y: 130px;
+  background-size: 100%;
+  background-position: 0 130px;
   background-repeat: no-repeat;
   cursor: pointer;
 
