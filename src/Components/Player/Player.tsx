@@ -4,19 +4,9 @@ import styled, { css } from 'styled-components';
 import { ReactSortable } from 'react-sortablejs';
 import MusicItems from 'Components/MusicItems/MusicItems';
 import { connect } from 'react-redux';
-import { setNewList, removeMusic } from 'Redux_aeri/Actions';
+import { setNewList } from 'Redux_aeri/Actions';
 import Lyrics from 'Components/Lyrics/Lyrics';
 import Icons from 'Images/vibe.svg';
-
-interface ItemType {
-  id: number;
-  music_id: number;
-  music_name: string;
-  artist_name: string;
-  album_image: string;
-  stream_url?: string;
-  lyrics: string;
-}
 
 interface Toggle {
   toggle: boolean;
@@ -66,7 +56,6 @@ interface Props {
 }
 
 const Player: React.FC<Props> = (props) => {
-  const [state, setState] = useState<ItemType[]>([]);
   const { songList, setNewList } = props;
   const [toggle, setToggle] = useState<boolean>(false);
   const [like, setLike] = useState<boolean>(false);
@@ -74,7 +63,7 @@ const Player: React.FC<Props> = (props) => {
   const [lyrics, setLyrics] = useState<string>('');
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [currentTitle, setCurrentTitle] = useState<string>('');
-  const [currentArtist, setCurrentArtist] = useState<string>('');
+  const [currentArtist, setCurrentArtist] = useState<string[]>([]);
   const [currentImage, setCurrentImage] = useState<string>('');
   const [isplaying, setIsplaying] = useState<boolean>(false);
   const [progressbar, setProgressbar] = useState<number>(0);
@@ -94,7 +83,7 @@ const Player: React.FC<Props> = (props) => {
   let newArr = [...history, currentIndex];
 
   const startPlayer = () => {
-    const currentSong = state[currentIndex];
+    const currentSong = songList[currentIndex];
     if (currentSong !== undefined) {
       player.src = `${ip}music${currentSong.stream_url}`;
       setCurrentTitle(currentSong.music_name);
@@ -224,7 +213,7 @@ const Player: React.FC<Props> = (props) => {
   };
 
   const handlePlay = (props: any) => {
-    const idx = state.findIndex((item, idx) => item.music_id === props.id);
+    const idx = songList.findIndex((item, idx) => item.music_id === props.id);
     if (player.paused) {
       // console.log('props', props);
       // console.log('state', state);
@@ -245,18 +234,18 @@ const Player: React.FC<Props> = (props) => {
   const LyricsClose = () => {
     setLyricsModal(false);
   };
-  const getSongs = async () => {
-    await fetch(`${ip}music/station_music/2`)
-      .then((res) => res.json())
-      .then((res) => {
-        // let data = [...state, res.music_list];
-        setState(res.music_list);
-      });
-  };
+  // const getSongs = async () => {
+  //   await fetch(`${ip}music/station_music/2`)
+  //     .then((res) => res.json())
+  //     .then((res) => {
+  //       // let data = [...state, res.music_list];
+  //       setState(res.music_list);
+  //     });
+  // };
 
-  useEffect(() => {
-    getSongs();
-  }, []);
+  // useEffect(() => {
+  //   getSongs();
+  // }, []);
 
   useEffect(() => {
     // getSongs();
@@ -266,7 +255,7 @@ const Player: React.FC<Props> = (props) => {
     setTotaltime('00:00');
 
     playerRef.current = player;
-  }, [state, currentIndex]);
+  }, [songList, currentIndex]);
 
   return (
     <>
@@ -350,7 +339,6 @@ const Player: React.FC<Props> = (props) => {
                     music_name={item.music_name}
                     album_image={item.album_image}
                     artist_name={item.artist_name}
-                    onRemove={(id: number) => removeMusic(id)}
                     handlePlay={(props: any) => handlePlay(props)}
                     isplaying={isplaying}
                   />
@@ -379,7 +367,7 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export default connect(mapStateToProps, { setNewList, removeMusic })(Player);
+export default connect(mapStateToProps, { setNewList })(Player);
 
 const pseudoAfter = css`
   content: '';
