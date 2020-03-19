@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import MusicItems from 'Components/MusicItems/MusicItems';
+import Lyrics from 'Components/Lyrics/Lyrics';
 import { ReactSortable } from 'react-sortablejs';
 import styled, { css } from 'styled-components';
 import Icons from 'Img/vibe.svg';
@@ -10,10 +11,15 @@ interface ItemType {
   artist_name: string;
   album_image: string;
   src: string;
+  // lyrics?: string;
 }
 
 interface Toggle {
   toggle: boolean;
+}
+
+interface Like {
+  like: boolean;
 }
 
 interface Playing {
@@ -100,6 +106,8 @@ const Player: React.FC = (props) => {
   ]);
 
   const [toggle, setToggle] = useState<boolean>(false);
+  const [like, setLike] = useState<boolean>(false);
+  const [lyricsModal, setLyricsModal] = useState<boolean>(false);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [currentTitle, setCurrentTitle] = useState<string>('');
   const [currentArtist, setCurrentArtist] = useState<string>('');
@@ -109,33 +117,40 @@ const Player: React.FC = (props) => {
   const [progress, setProgress] = useState<boolean>(false);
   const [volumebar, setVolumebar] = useState<number>(100);
   const [volumeup, setVolumeup] = useState<boolean>(true);
-  const [currentTime, setCurrentTime] = useState<string>('00:00');
+  const [currenttime, setCurrentTime] = useState<string>('00:00');
   const [totalTime, setTotaltime] = useState<string>('00:00');
   const [loop, setLoop] = useState<boolean>(false);
   const [shuffle, setShuffle] = useState<boolean>(false);
   const volumeRef = useRef<any>(null);
+  const progressbarRef = useRef<any>(null);
   const [history, setHistory] = useState<any>([]);
   const player = new Audio();
   const playerRef = useRef(player);
   const prevPlayer = playerRef.current;
   let newArr = [...history, currentIndex];
 
-  console.log('player', player.src, 'prev', prevPlayer.src);
-  console.log('currentIndex', currentIndex);
+  // console.log('player', player.src, 'prev', prevPlayer.src);
+  // console.log('currentIndex', currentIndex, state[currentIndex].name);
+  // console.log('position', prevPlayer.currentTime, prevPlayer.duration);
   // console.log(history);
+  // console.log('progressbar', progressbar);
+  // console.log('volumebar', volumebar);
   // console.log('shuffle', shuffle, 'loop', loop);
   // console.log('prevPlayer', playerRef);
 
   const startPlayer = () => {
     const currentSong = state[currentIndex];
+    console.log('currentSong', currentSong);
+    console.log('4444', playerRef.current);
     player.src = currentSong.src;
+    console.log('5555', playerRef.current);
     setCurrentTitle(currentSong.name);
     setCurrentArtist(currentSong.artist_name);
     setCurrentImage(currentSong.album_image);
-    if (isplaying) {
-      setIsplaying(true);
-      player.play();
-    }
+    // if (isplaying) {
+    //   setIsplaying(true);
+    //   prevPlayer.play();
+    // }
 
     // setIsplaying(true);
     // prevPlayer.play();
@@ -145,6 +160,7 @@ const Player: React.FC = (props) => {
     if (prevPlayer.paused) {
       prevPlayer.play();
       setIsplaying(!isplaying);
+      musicPlayer();
     } else {
       prevPlayer.pause();
       setIsplaying(!isplaying);
@@ -155,15 +171,14 @@ const Player: React.FC = (props) => {
     if (shuffle) {
       setHistory(newArr);
       setCurrentIndex(Math.floor(Math.random() * state.length));
-      console.log(Math.floor(Math.random() * state.length));
       startPlayer();
     } else {
       if (currentIndex === state.length - 1) {
         prevPlayer.pause();
         setIsplaying(false);
       } else {
-        // prevPlayer.pause();
-        // setIsplaying(false);
+        prevPlayer.pause();
+        setIsplaying(false);
         setHistory(newArr);
         setCurrentIndex(currentIndex + 1);
         startPlayer();
@@ -175,7 +190,10 @@ const Player: React.FC = (props) => {
   const playPrev = () => {
     if (history[history.length - 1] >= 0) {
       setCurrentIndex(history.pop());
-      startPlayer();
+      prevPlayer.pause();
+      setIsplaying(false);
+      // startPlayer();
+      musicPlayer();
     } else {
       prevPlayer.pause();
       setIsplaying(false);
@@ -217,35 +235,27 @@ const Player: React.FC = (props) => {
 
   const onBarClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const offsetX = e.nativeEvent.offsetX;
-    // console.log(offsetX);
-    const offsetWidth = window.innerWidth;
-    // console.log(offsetWidth);
+    const offsetWidth = progressbarRef.current.offsetWidth;
     const percent = offsetX / offsetWidth;
     prevPlayer.currentTime = percent * prevPlayer.duration;
+    setProgressbar((prevPlayer.currentTime / prevPlayer.duration) * 100);
   };
 
   const onVolumeClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const offsetX = e.nativeEvent.offsetX;
-    // console.log(offsetX);
     const offsetWidth = volumeRef.current.offsetWidth;
-    // console.log(volumeRef.current.offsetWidth);
     prevPlayer.volume = offsetX / offsetWidth;
+    setVolumebar(prevPlayer.volume * 100);
   };
 
   const toggleVolume = () => {
     setVolumeup(!volumeup);
     !volumeup ? (prevPlayer.volume = 0) : (prevPlayer.volume = 1);
+    setVolumebar(prevPlayer.volume * 100);
   };
 
   const musicPlayer = () => {
     startPlayer();
-    prevPlayer.addEventListener(
-      'volumechange',
-      () => {
-        setVolumebar(prevPlayer.volume * 100);
-      },
-      false,
-    );
     prevPlayer.addEventListener('timeupdate', () => {
       let position = prevPlayer.currentTime / prevPlayer.duration;
       setProgressbar(position * 100);
@@ -256,29 +266,58 @@ const Player: React.FC = (props) => {
   };
 
   //플레이 리스트 모달창
+  const handleLike = () => {
+    setLike(!like);
+  };
+
   const handlePlaylist = () => {
     setToggle(!toggle);
+  };
+
+  // const findItem = id => {
+  //   state.find((item)=> item.id === id)
+
+  //   }
+
+  const handlePlay = (props: any) => {
+    const idx = state.findIndex((item, idx) => item.id === props.id);
+    console.log('2222', playerRef.current);
+    if (prevPlayer.paused) {
+      console.log('props', props);
+      console.log('state', state);
+      console.log('idx', idx);
+      setCurrentIndex(idx);
+      console.log('3333', playerRef.current);
+      // setIsplaying(true);
+    } else {
+      prevPlayer.pause();
+      setIsplaying(false);
+      setCurrentIndex(idx);
+    }
   };
 
   const handleRemove = (id: number) => {
     setState(state.filter((item) => item.id !== id));
   };
 
-  // useEffect(() => {
-  //   isplaying ? player.play() : player.pause();
-  // }, [isplaying]);
-  // useEffect(() => {
-  //   player.addEventListener('ended', () => setIsplaying(false));
-  //   return () => {
-  //     player.removeEventListener('ended', () => setIsplaying(false));
-  //   };
-  // }, []);
+  const handleLyrics = () => {
+    setLyricsModal(true);
+  };
+
+  const LyricsClose = () => {
+    setLyricsModal(false);
+  };
+
   useEffect(() => {
     musicPlayer();
     setProgressbar(0);
     setCurrentTime('00:00');
     setTotaltime('00:00');
     playerRef.current = player;
+    console.log('11111', playerRef.current);
+    if (isplaying) {
+      prevPlayer.play();
+    }
   }, [currentIndex]);
 
   return (
@@ -291,8 +330,8 @@ const Player: React.FC = (props) => {
             <Artist>{currentArtist}</Artist>
           </InfoArea>
           <OptionArea>
-            <LikeBtn />
-            <LyricsBtn />
+            <LikeBtn like={like} onClick={handleLike} />
+            <LyricsBtn onClick={handleLyrics} />
             <MoreBtn />
           </OptionArea>
         </SongInfo>
@@ -308,15 +347,17 @@ const Player: React.FC = (props) => {
         <PlayingProgress
           onMouseOver={ProgressOver}
           onMouseLeave={ProgressLeave}
+          ref={progressbarRef}
+          onClick={onBarClick}
         >
           <BarProgress>
-            <BarLoad onClick={onBarClick} mouseprogress={progress} />
+            <BarLoad mouseprogress={progress} />
             <ProgressBar progress={progressbar} mouseprogress={progress} />
           </BarProgress>
         </PlayingProgress>
         <PlayerCover mouseprogress={progress} />
         <Playtime>
-          <Now>{currentTime}</Now>
+          <Now>{currenttime}</Now>
           <Remain>{totalTime}</Remain>
         </Playtime>
         <Volume>
@@ -342,8 +383,8 @@ const Player: React.FC = (props) => {
           <TitleArea>
             <ListTitle>이어지는 노래</ListTitle>
             <Control>
-              <Shuffle />
-              <Repeat />
+              <Shuffle shuffle={shuffle} onClick={toggleShuffle} />
+              <Repeat loop={loop} onClick={toggleLoop} />
             </Control>
           </TitleArea>
           <ListWrap>
@@ -362,6 +403,8 @@ const Player: React.FC = (props) => {
                     album_image={item.album_image}
                     artist_name={item.artist_name}
                     onRemove={(id: number) => handleRemove(id)}
+                    handlePlay={(props: any) => handlePlay(props)}
+                    isplaying={isplaying}
                   />
                 ))}
               </ReactSortable>
@@ -369,6 +412,7 @@ const Player: React.FC = (props) => {
           </ListWrap>
         </ListSection>
       </Playlist>
+      {lyricsModal && <Lyrics onClick={LyricsClose} />}
     </>
   );
 };
@@ -396,10 +440,15 @@ const SongInfo = styled.div`
 `;
 
 const Thumb = styled.img`
+  display: none;
+
+  ${({ theme }) => theme.media.desktop`
+  display: block;
   width: 45px;
   height: 45px;
   margin-right: 12px;
   float: left;
+  `}
 `;
 
 const InfoArea = styled.div`
@@ -431,7 +480,8 @@ const LikeBtn = styled.a`
   text-align: center;
 
   ::after {
-    background-position: -34px -747px;
+    background-position: ${(props: Like) =>
+      props.like ? '-511px -591px' : '-34px -747px'};
     width: 22px;
     height: 22px;
     margin: 12px 16px 0px 8px;
@@ -479,8 +529,14 @@ const ControlSection = styled.div`
 
 const ControlArea = styled.div`
   position: relative;
+  width: 165px;
+  margin: 0 auto;
+
+  ${({ theme }) => theme.media.desktop`
+   position: relative;
   width: 156px;
   margin: 0 auto;
+  `}
 `;
 
 const BtnNow = styled.a`
@@ -548,6 +604,10 @@ const BtnNext = styled.a`
 `;
 
 const BtnShuffle = styled.a`
+  display: none;
+
+  ${({ theme }) => theme.media.desktop`
+  display: block;
   position: absolute;
   top: 0;
   left: -56px;
@@ -555,8 +615,8 @@ const BtnShuffle = styled.a`
   height: 56px;
   text-align: center;
   border-radius: 50%;
-
-  ::after {
+  `}
+    ::after {
     background-position: ${(props: Shuffle) =>
       props.shuffle ? '-721px -591px' : '-450px -681px'};
     width: 22px;
@@ -571,6 +631,10 @@ const BtnShuffle = styled.a`
 `;
 
 const BtnRepeat = styled.a`
+  display: none;
+
+  ${({ theme }) => theme.media.desktop`
+  display: block;
   position: absolute;
   top: 0;
   right: -56px;
@@ -579,8 +643,8 @@ const BtnRepeat = styled.a`
   text-align: center;
   border-radius: 50%;
   color: ${(props: Loop) => props.loop && 'white'};
-
-  ::after {
+  `}
+    ::after {
     background-position: ${(props: Loop) =>
       props.loop ? '-570px -681px' : '-600px -681px'};
     width: 22px;
@@ -632,8 +696,7 @@ const BarLoad = styled.div`
 `;
 
 const ProgressBar = styled.div`
-  width: ${(props: Progress) =>
-    props.progress > 0 ? `${props.progress}%` : '0'};
+  width: ${(props: Progress) => props.progress}%;
   position: relative;
   height: 3px;
   height: ${(props: Progress) => (props.mouseprogress ? '18px' : '3px')};
@@ -642,12 +705,17 @@ const ProgressBar = styled.div`
 `;
 
 const Playtime = styled.div`
+  display: none;
+
+  ${({ theme }) => theme.media.desktop`
+  display: block;
   position: absolute;
   right: 258px;
   top: 34px;
   font-size: 12px;
   line-height: 14px;
   text-align: right;
+  `}
 `;
 
 const Now = styled.span`
@@ -668,9 +736,14 @@ const Remain = styled.span`
 `;
 
 const Volume = styled.div`
+  display: none;
+
+  ${({ theme }) => theme.media.desktop`
+  display: block;
   position: absolute;
   top: 24px;
   right: 110px;
+  `}
 `;
 
 const BtnVolume = styled.a`
@@ -756,6 +829,10 @@ const Modal = styled.div`
 `;
 
 const CoverSection = styled.div`
+  display: none;
+
+  ${({ theme }) => theme.media.desktop`
+  display: block;
   position: absolute;
   top: 0;
   right: 350px;
@@ -765,6 +842,7 @@ const CoverSection = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  `}
 `;
 
 const ThumbCover = styled.span`
@@ -777,17 +855,31 @@ const CoverImage = styled.img`
 `;
 
 const ListSection = styled.div`
+  width: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #141414;
+
+  ${({ theme }) => theme.media.desktop`
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   width: 350px;
   background-color: #141414;
+  `}
 `;
 
 const TitleArea = styled.div`
+  margin: 27px 0 0 20px;
+  position: relative;
+
+  ${({ theme }) => theme.media.desktop`
   position: relative;
   margin: 26px 0 0 20px;
+  `}
 `;
 
 const ListTitle = styled.span`
@@ -810,7 +902,8 @@ const Shuffle = styled.a`
   text-align: center;
 
   ::after {
-    background-position: -450px -681px;
+    background-position: ${(props: Shuffle) =>
+      props.shuffle ? '-721px -591px' : '-450px -681px'};
     width: 22px;
     height: 22px;
     ${pseudoAfter}
@@ -824,7 +917,8 @@ const Repeat = styled.a`
   text-align: center;
 
   ::after {
-    background-position: -600px -681px;
+    background-position: ${(props: Loop) =>
+      props.loop ? '-570px -681px' : '-600px -681px'};
     width: 22px;
     height: 22px;
     ${pseudoAfter}

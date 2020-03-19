@@ -252,9 +252,16 @@ const MyMenu = styled.div`
 `;
 
 const ProfileArea = styled.div`
+  display: none;
   border-style: solid;
   border-color: rgba(216, 216, 216, 0.13);
   border-width: 1px 0;
+  ${({ theme }) => theme.media.desktop`
+  display: block;
+  border-style: solid;
+  border-color: rgba(216, 216, 216, 0.13);
+  border-width: 1px 0;
+  `}
 `;
 
 const MenuArea = styled.div`
