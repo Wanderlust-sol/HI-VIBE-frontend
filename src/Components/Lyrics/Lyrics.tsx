@@ -1,13 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
-import Icons from 'Img/vibe.svg';
+import Icons from 'Images/vibe.svg';
 
 interface Props {
   onClick: (LyricsClose: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  lyrics: string;
+  music_name: string;
+  album_image: string;
+  artist_name: string;
 }
 
-const lyrics =
-  'I’m at a party I don’t wanna be at\nAnd I don’t ever wear a suit and tie \nWondering if I can sneak out of the back\nNobody is even looking at me in my eyes\nAnd then you take my hand finish my drink say shall we dance (hell yeah)\nY’know I love you did I ever tell you you make it better like that\n\nDon’t think I fit in at this party\nEveryone’s got so much to say\nI always feel like I’m nobody\nWho wants to fit in anyway\n\nCoz I don’t care when I’m with my baby yeah\nAll the bad things disappear\nAnd you making me feel that maybe I am somebody\nI can deal with the bad nights when I’m with my baby yeah (ooh ooh ooh)\nCoz I don’t care\nAs long as you just hold me near \nYou can take me anywhere and you making me feel like I’m loved by somebody\nI can deal with the bad nights when I’m with my baby yeah\n\nWe at a party we don’t wanna be at\nTrying to talk but we can’t hear ourselves\nRead your lips I’d rather kiss ‘em right back\nWith all these people all around I’m crippled with anxiety\nBut I’m told its where I’m supposed to be\nYou know what? It’s kind of crazy coz I really don’t mind\nWhen you make it better like that\n\nDon’t think I fit in at this party\nEveryone’s got so much to say\nWhen we walked in I said I’m sorry\nBut now I think that we should stay\n\nCoz I don’t care when I’m with my baby yeah\nAll the bad things disappear\nAnd you making me feel that maybe I am somebody\nI can deal with the bad nights when I’m with my baby yeah (ooh ooh ooh oh yeah yeah yeah)\nCoz I don’t care as long as you just hold me near \nYou can take me anywhere and you making me feel like I’m loved by somebody\nI can deal with the bad nights when I’m with my baby yeah (oh oh oh oh no)\n\nI don’t like ‘bout nobody but you\nIt’s like you’re the only one here\nI don’t like ‘bout nobody but you baby I don’t care\nI don’t like ‘bout nobody but you\nI hate everyone here\nI don’t like ‘bout nobody but you baby yeah\n\nCoz I don’t care (don’t care) when I’m with my baby yeah (oh yeah)\nAll the bad things disappear (disappear)\nAnd you making me feel that maybe I am somebody (maybe I’m somebody)\nI can deal with the bad nights (with the bad nights) when I’m with my baby yeah (ooh ooh ooh oh yeah yeah yeah)\nCoz I don’t care as long as you just hold me near (me near)\nYou can take me anywhere (anywhere anywhere) and you making me feel like I’m loved by somebody (loved by somebody yeah)\nI can deal with the bad nights when I’m with my baby yeah (oh oh oh oh no)';
 const Lyrics: React.FC<Props> = (props: Props) => {
   return (
     <LyricsModal>
@@ -15,21 +17,16 @@ const Lyrics: React.FC<Props> = (props: Props) => {
         <LyricsPopup>
           <LySongInfo>
             <LyThumb>
-              <LyImg src="https://musicmeta-phinf.pstatic.net/album/004/480/4480594.jpg?type=r100Fll&v=20200309220857" />
+              <LyImg src={props.album_image} />
             </LyThumb>
             <LyInfoArea>
-              <LyTitle>WANNABE</LyTitle>
-              <LyArtist>ITZY(있지)</LyArtist>
+              <LyTitle>{props.music_name}</LyTitle>
+              <LyArtist>{props.artist_name}</LyArtist>
             </LyInfoArea>
           </LySongInfo>
           <LyContents>
-            {lyrics.split('\n').map((line) => {
-              return (
-                <span>
-                  {line}
-                  <br />
-                </span>
-              );
+            {props.lyrics.split('\n').map((line) => {
+              return <p>{line}</p>;
             })}
           </LyContents>
           <LyClose onClick={props.onClick} />

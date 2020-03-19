@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from 'react';
 import Layout from 'Components/Layout/Layout';
-import ThemeIcon from 'Img/themeIcon.png';
+import ThemeIcon from 'Images/themeIcon.png';
 import Footer from 'Components/Footer/Footer';
 // import StationComponent from 'Components/StationComponent';
 import StationItemBox from 'Components/StationItemBox';

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router';
-// import Login from 'Utils/Login';
-import Icons from 'Img/vibe.svg';
+import { ip } from 'config';
 import styled, { css } from 'styled-components';
+// import Login from 'Utils/Login';
+import Icons from 'Images/vibe.svg';
 
 declare global {
   interface Window {
@@ -87,7 +88,7 @@ const Nav: React.FC = () => {
         Authorization: loca,
       };
 
-      fetch('http://10.58.2.227:8000/user/naver_auth', {
+      fetch(`${ip}user/naver_auth`, {
         method: 'get',
         headers: header,
       })
@@ -178,11 +179,11 @@ const MainNav = styled.nav`
   z-index: 10;
   /* 1100정도 이상********************* */
   ${({ theme }) => theme.media.desktop`
-background-color: black;
- width: 225px;
-  height: 100vh;
-  position: fixed;
-  top: 0;
+    background-color: black;
+    width: 225px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
   `}
 `;
 
