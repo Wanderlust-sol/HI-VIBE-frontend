@@ -25,8 +25,8 @@ const TotalBackground = styled.div`
   overflow-x: hidden;
   width: 100%;
   ${({ theme }) => theme.media.desktop`
- display: flex;
- width:100%;
+  display: flex;
+  width:100%;
   overflow-x: hidden;
   `}
 `;
@@ -40,13 +40,13 @@ const MainContainer = styled.div`
 
   ${({ theme }) => theme.media.desktop`
   position: relative;
- margin-top:0;
+  margin-top:0;
   color: black;
   min-height: 600px;
   padding-left: 225px;
   background-color: #fbfbfb;
   width: 100%;
-    display: flex;
+  display: flex;
   justify-content: center;
   `}
 `;

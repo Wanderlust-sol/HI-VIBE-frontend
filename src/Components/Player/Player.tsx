@@ -1,17 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { ip } from 'config';
+import styled, { css } from 'styled-components';
+import { ReactSortable } from 'react-sortablejs';
 import MusicItems from 'Components/MusicItems/MusicItems';
 import Lyrics from 'Components/Lyrics/Lyrics';
-import { ReactSortable } from 'react-sortablejs';
-import styled, { css } from 'styled-components';
-import Icons from 'Img/vibe.svg';
+import Icons from 'Images/vibe.svg';
 
 interface ItemType {
   id: number;
-  name: string;
+  music_id: number;
+  music_name: string;
   artist_name: string;
   album_image: string;
-  src: string;
-  // lyrics?: string;
+  stream_url?: string;
+  lyrics: string;
 }
 
 interface Toggle {
@@ -44,70 +46,11 @@ interface Volume {
 }
 
 const Player: React.FC = (props) => {
-  // const [url, setUrl] = useState<any>('');
-
-  // useEffect(() => {
-  //   fetch('http://10.58.2.227:8000/music/stream/1', {
-  //     method: 'GET',
-  //   }).then((res) => {
-  //     setUrl(url);
-  //   });
-  // }, []);
-
-  const [state, setState] = useState<ItemType[]>([
-    {
-      id: 1,
-      name: 'WANNABE',
-      artist_name: 'ITZY(있지)',
-      album_image:
-        'https://musicmeta-phinf.pstatic.net/album/004/480/4480594.jpg?type=r100Fll&v=20200309220857',
-      src: 'Audio/몽니 - 소년이 어른이 되어.mp3',
-    },
-    {
-      id: 2,
-      name: '달라달라',
-      artist_name: 'ITZY(있지)',
-      album_image:
-        'https://musicmeta-phinf.pstatic.net/album/002/841/2841538.jpg?type=r100Fll&v=20200218132210',
-      src: 'Audio/ES_Insane - Loving Caliber.mp3',
-    },
-    {
-      id: 3,
-      name: 'CHERRY',
-      artist_name: 'ITZY(있지)',
-      album_image:
-        'https://musicmeta-phinf.pstatic.net/album/003/132/3132878.jpg?type=r100Fll&v=20200218131711',
-      src: 'Audio/daybreak.mp3',
-    },
-    {
-      id: 4,
-      name: "THAT'S NO NO",
-      artist_name: 'ITZY(있지)',
-      album_image:
-        'https://musicmeta-phinf.pstatic.net/album/004/480/4480594.jpg?type=r100Fll&v=20200309220857',
-      src: 'Audio/ES_Insane - Loving Caliber.mp3',
-    },
-    {
-      id: 5,
-      name: "IT'z SUMMER",
-      artist_name: 'ITZY(있지)',
-      album_image:
-        'https://musicmeta-phinf.pstatic.net/album/003/132/3132878.jpg?type=r100Fll&v=20200218131711',
-      src: 'Audio/ES_Future Vibes - Qeeo.mp3',
-    },
-    {
-      id: 6,
-      name: 'WANT IT?',
-      artist_name: 'ITZY(있지)',
-      album_image:
-        'https://musicmeta-phinf.pstatic.net/album/002/841/2841538.jpg?type=r100Fll&v=20200218132210',
-      src: 'Audio/ES_Insane - Loving Caliber.mp3',
-    },
-  ]);
-
+  const [state, setState] = useState<ItemType[]>([]);
   const [toggle, setToggle] = useState<boolean>(false);
   const [like, setLike] = useState<boolean>(false);
   const [lyricsModal, setLyricsModal] = useState<boolean>(false);
+  const [lyrics, setLyrics] = useState<string>('');
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [currentTitle, setCurrentTitle] = useState<string>('');
   const [currentArtist, setCurrentArtist] = useState<string>('');
@@ -125,35 +68,19 @@ const Player: React.FC = (props) => {
   const progressbarRef = useRef<any>(null);
   const [history, setHistory] = useState<any>([]);
   const player = new Audio();
-  const playerRef = useRef(player);
+  const playerRef = useRef<any>(null);
   const prevPlayer = playerRef.current;
   let newArr = [...history, currentIndex];
 
-  // console.log('player', player.src, 'prev', prevPlayer.src);
-  // console.log('currentIndex', currentIndex, state[currentIndex].name);
-  // console.log('position', prevPlayer.currentTime, prevPlayer.duration);
-  // console.log(history);
-  // console.log('progressbar', progressbar);
-  // console.log('volumebar', volumebar);
-  // console.log('shuffle', shuffle, 'loop', loop);
-  // console.log('prevPlayer', playerRef);
-
   const startPlayer = () => {
     const currentSong = state[currentIndex];
-    console.log('currentSong', currentSong);
-    console.log('4444', playerRef.current);
-    player.src = currentSong.src;
-    console.log('5555', playerRef.current);
-    setCurrentTitle(currentSong.name);
-    setCurrentArtist(currentSong.artist_name);
-    setCurrentImage(currentSong.album_image);
-    // if (isplaying) {
-    //   setIsplaying(true);
-    //   prevPlayer.play();
-    // }
-
-    // setIsplaying(true);
-    // prevPlayer.play();
+    if (currentSong !== undefined) {
+      player.src = `${ip}music${currentSong.stream_url}`;
+      setCurrentTitle(currentSong.music_name);
+      setCurrentArtist(currentSong.artist_name);
+      setCurrentImage(currentSong.album_image);
+      setLyrics(currentSong.lyrics);
+    }
   };
 
   const PlayOrPause = () => {
@@ -256,13 +183,14 @@ const Player: React.FC = (props) => {
 
   const musicPlayer = () => {
     startPlayer();
-    prevPlayer.addEventListener('timeupdate', () => {
-      let position = prevPlayer.currentTime / prevPlayer.duration;
-      setProgressbar(position * 100);
-      convertTime(Math.round(prevPlayer.currentTime));
-      TotalTime(Math.round(prevPlayer.duration));
-      prevPlayer.ended && playNext();
-    });
+    prevPlayer !== null &&
+      prevPlayer.addEventListener('timeupdate', () => {
+        let position = prevPlayer.currentTime / prevPlayer.duration;
+        setProgressbar(position * 100);
+        convertTime(Math.round(prevPlayer.currentTime));
+        TotalTime(Math.round(prevPlayer.duration));
+        prevPlayer.ended && playNext();
+      });
   };
 
   //플레이 리스트 모달창
@@ -280,24 +208,22 @@ const Player: React.FC = (props) => {
   //   }
 
   const handlePlay = (props: any) => {
-    const idx = state.findIndex((item, idx) => item.id === props.id);
-    console.log('2222', playerRef.current);
-    if (prevPlayer.paused) {
-      console.log('props', props);
-      console.log('state', state);
-      console.log('idx', idx);
+    const idx = state.findIndex((item, idx) => item.music_id === props.id);
+    if (player.paused) {
+      // console.log('props', props);
+      // console.log('state', state);
+      // console.log('idx', idx);
       setCurrentIndex(idx);
-      console.log('3333', playerRef.current);
       // setIsplaying(true);
     } else {
-      prevPlayer.pause();
+      player.pause();
       setIsplaying(false);
       setCurrentIndex(idx);
     }
   };
 
   const handleRemove = (id: number) => {
-    setState(state.filter((item) => item.id !== id));
+    setState(state.filter((item) => item.music_id !== id));
   };
 
   const handleLyrics = () => {
@@ -307,18 +233,28 @@ const Player: React.FC = (props) => {
   const LyricsClose = () => {
     setLyricsModal(false);
   };
+  const getSongs = async () => {
+    await fetch(`${ip}music/station_music/2`)
+      .then((res) => res.json())
+      .then((res) => {
+        // let data = [...state, res.music_list];
+        setState(res.music_list);
+      });
+  };
 
   useEffect(() => {
+    getSongs();
+  }, []);
+
+  useEffect(() => {
+    // getSongs();
     musicPlayer();
     setProgressbar(0);
     setCurrentTime('00:00');
     setTotaltime('00:00');
+
     playerRef.current = player;
-    console.log('11111', playerRef.current);
-    if (isplaying) {
-      prevPlayer.play();
-    }
-  }, [currentIndex]);
+  }, [state, currentIndex]);
 
   return (
     <>
@@ -397,9 +333,9 @@ const Player: React.FC = (props) => {
               >
                 {state.map((item) => (
                   <MusicItems
-                    key={item.id}
-                    id={item.id}
-                    name={item.name}
+                    key={item.music_id}
+                    id={item.music_id}
+                    music_name={item.music_name}
                     album_image={item.album_image}
                     artist_name={item.artist_name}
                     onRemove={(id: number) => handleRemove(id)}
@@ -412,7 +348,15 @@ const Player: React.FC = (props) => {
           </ListWrap>
         </ListSection>
       </Playlist>
-      {lyricsModal && <Lyrics onClick={LyricsClose} />}
+      {lyricsModal && (
+        <Lyrics
+          onClick={LyricsClose}
+          lyrics={lyrics}
+          music_name={currentTitle}
+          album_image={currentImage}
+          artist_name={currentArtist}
+        />
+      )}
     </>
   );
 };

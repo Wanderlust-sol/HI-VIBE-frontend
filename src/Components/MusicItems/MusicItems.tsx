@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Icons from 'Img/vibe.svg';
+import Icons from 'Images/vibe.svg';
 
 interface Items {
   id: number;
-  name: string;
+  music_name: string;
   artist_name: string;
   album_image: string;
   isplaying: boolean;
@@ -42,7 +42,7 @@ const MusicItems: React.FC<Items> = (props: Items) => {
         />
       </Thumb>
       <InfoArea>
-        <Title>{props.name}</Title>
+        <Title>{props.music_name}</Title>
         <Artist>{props.artist_name}</Artist>
       </InfoArea>
       <BtnDelete onClick={() => props.onRemove(props.id)} />
