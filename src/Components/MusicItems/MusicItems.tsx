@@ -5,7 +5,7 @@ import Icons from 'Images/vibe.svg';
 interface Items {
   id: number;
   music_name: string;
-  artist_name: string;
+  artist_name: Array<string>;
   album_image: string;
   isplaying: boolean;
   onRemove: (id: number) => void;
