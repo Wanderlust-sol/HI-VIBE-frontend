@@ -7,12 +7,15 @@ interface Items {
   name: string;
   artist_name: string;
   album_image: string;
+  isplaying: boolean;
   onRemove: (id: number) => void;
+  handlePlay: (props: any) => void;
   onClick?: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
 
-interface Mouse {
-  mouse: boolean;
+interface StyleProps {
+  mouse?: boolean;
+  isplaying?: boolean;
 }
 
 const MusicItems: React.FC<Items> = (props: Items) => {
@@ -32,7 +35,11 @@ const MusicItems: React.FC<Items> = (props: Items) => {
     >
       <Thumb>
         <Img src={props.album_image} />
-        <IconPlay mouse={mouse} />
+        <IconPlay
+          mouse={mouse}
+          isplaying={props.isplaying}
+          onClick={() => props.handlePlay(props)}
+        />
       </Thumb>
       <InfoArea>
         <Title>{props.name}</Title>
@@ -54,7 +61,7 @@ const ListItem = styled.li`
   padding: 8px 0;
   table-layout: fixed;
   cursor: move;
-  ${(props: Mouse) =>
+  ${(props: StyleProps) =>
     props.mouse
       ? { backgroundColor: 'hsla(0,0%,100%,.08)' }
       : { backgroundColor: '' }}
@@ -94,7 +101,7 @@ const IconPlay = styled.a`
   height: 40px;
   top: 8px;
   left: 20px;
-  ${(props: Mouse) =>
+  ${(props: StyleProps) =>
       props.mouse && {
         position: 'absolute',
         left: '50%',
@@ -103,7 +110,8 @@ const IconPlay = styled.a`
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
       }}
     ::after {
-    background-position: -194px -803px;
+    background-position: ${(props: StyleProps) =>
+      props.isplaying ? '-751px -719px' : '-194px -803px'};
     width: 13px;
     height: 16px;
     content: '';
@@ -113,7 +121,7 @@ const IconPlay = styled.a`
     top: 50%;
     transform: translate(-50%, -50%);
     background-image: url(${Icons});
-    ${(props: Mouse) =>
+    ${(props: StyleProps) =>
       props.mouse ? { visibility: 'visible' } : { visibility: 'hidden' }}
   }
 `;
