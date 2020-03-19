@@ -7,7 +7,7 @@ interface Props {
   lyrics: string;
   music_name: string;
   album_image: string;
-  artist_name: string;
+  artist_name: string[];
 }
 
 const Lyrics: React.FC<Props> = (props: Props) => {

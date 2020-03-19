@@ -93,7 +93,7 @@ class DjStation extends Component<Props, IState> {
         );
       });
   };
-  
+
   getModalFetch = () => {
     fetch('http://10.58.2.227:8000/music/station/theme', {
       method: 'GET',
@@ -204,6 +204,8 @@ class DjStation extends Component<Props, IState> {
                         {...this.props}
                         imgUrl={station.image}
                         key={index}
+                        id={station.station_id}
+                        // onClick={this.getMusic}
                         // songBox={this.state.songBox}
                       />
                     ))}
@@ -227,6 +229,7 @@ class DjStation extends Component<Props, IState> {
                       <StationItemBox
                         imgUrl={station.image}
                         key={index}
+                        id={station.station_id}
                         // onClick={this.state.songBox}
                       />
                     ))}

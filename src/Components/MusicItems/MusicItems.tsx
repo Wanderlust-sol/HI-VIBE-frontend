@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
+import { removeMusic } from 'Redux_aeri/Actions';
 import Icons from 'Images/vibe.svg';
 
 interface Items {
@@ -8,9 +10,9 @@ interface Items {
   artist_name: Array<string>;
   album_image: string;
   isplaying: boolean;
-  onRemove: (id: number) => void;
   handlePlay: (props: any) => void;
   onClick?: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
+  removeMusic: any;
 }
 
 interface StyleProps {
@@ -45,12 +47,12 @@ const MusicItems: React.FC<Items> = (props: Items) => {
         <Title>{props.music_name}</Title>
         <Artist>{props.artist_name}</Artist>
       </InfoArea>
-      <BtnDelete onClick={() => props.onRemove(props.id)} />
+      <BtnDelete onClick={() => props.removeMusic(props.id)} />
     </ListItem>
   );
 };
 
-export default MusicItems;
+export default connect(null, { removeMusic })(MusicItems);
 
 const ListItem = styled.li`
   position: relative;
