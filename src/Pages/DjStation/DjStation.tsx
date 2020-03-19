@@ -26,6 +26,20 @@ interface ThemeList {
   creator: string;
   changeThemeId: (id: number) => void;
 }
+
+interface MusicList {
+  music_id: number;
+  music_name: string;
+  track_number: number;
+  album_image: string;
+  album_name: string;
+  album_id: number;
+  lyrics: any;
+  stream_url: string;
+  artist_name: Array<string>;
+  artist_id: Array<number>;
+}
+
 interface IState {
   data: Array<StationInfo>;
   genre: Array<StationInfo>;
@@ -34,6 +48,7 @@ interface IState {
   setModal: boolean;
   theme_list: Array<ThemeList>;
   theme_id: number;
+  songBox: Array<MusicList>;
 }
 
 class DjStation extends Component<Props, IState> {
@@ -48,19 +63,24 @@ class DjStation extends Component<Props, IState> {
       setModal: false,
       theme_list: [],
       theme_id: 1,
+      songBox: [],
     };
   }
   componentDidMount() {
     this.getFirstPage();
     this.genreStationFetch();
     this.getModalFetch();
+    this.stationMusicFetch();
   }
   // 첫 번째 fetch
   getFirstPage = () => {
     // fetch('http://localhost:3000/data/djStationData.json')
-    fetch(`http://10.58.2.227:8000/music/station/theme${this.state.theme_id}`, {
-      method: 'GET',
-    })
+    fetch(
+      `http://10.58.2.227:8000/music/station/theme/${this.state.theme_id}`,
+      {
+        method: 'GET',
+      },
+    )
       .then((res) => res.json())
       .then((res) => {
         this.setState(
@@ -73,6 +93,7 @@ class DjStation extends Component<Props, IState> {
         );
       });
   };
+  
   getModalFetch = () => {
     fetch('http://10.58.2.227:8000/music/station/theme', {
       method: 'GET',
@@ -86,13 +107,24 @@ class DjStation extends Component<Props, IState> {
   };
   genreStationFetch = () => {
     // fetch('http://localhost:3000/data/genreData.json')
-    fetch(`http://10.58.2.227:8000/music/station/theme30`, {
+    fetch(`http://10.58.2.227:8000/music/station/theme/30`, {
       method: 'GET',
     })
       .then((res) => res.json())
       .then((res) => {
         this.setState({
           data2: res.theme_images,
+        });
+      });
+  };
+  stationMusicFetch = () => {
+    fetch('http://10.58.2.227:8000/music/station_music/2', {
+      method: 'GET',
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        this.setState({
+          songBox: res.music_list,
         });
       });
   };
@@ -168,7 +200,12 @@ class DjStation extends Component<Props, IState> {
                 <StaionWrapUl>
                   {this.state.data[0] &&
                     this.state.data.map((station: StationInfo, index) => (
-                      <StationItemBox imgUrl={station.image} key={index} />
+                      <StationItemBox
+                        {...this.props}
+                        imgUrl={station.image}
+                        key={index}
+                        // songBox={this.state.songBox}
+                      />
                     ))}
                 </StaionWrapUl>
               </DivForUl>
@@ -187,7 +224,11 @@ class DjStation extends Component<Props, IState> {
                 <StaionWrapUl>
                   {this.state.data2[0] &&
                     this.state.data2.map((station: StationInfo, index) => (
-                      <StationItemBox imgUrl={station.image} key={index} />
+                      <StationItemBox
+                        imgUrl={station.image}
+                        key={index}
+                        // onClick={this.state.songBox}
+                      />
                     ))}
                 </StaionWrapUl>
               </DivForUl>

@@ -3,6 +3,8 @@ import { ip } from 'config';
 import styled, { css } from 'styled-components';
 import { ReactSortable } from 'react-sortablejs';
 import MusicItems from 'Components/MusicItems/MusicItems';
+import { connect } from 'react-redux';
+import { setNewList, removeMusic } from 'Redux_aeri/Actions';
 import Lyrics from 'Components/Lyrics/Lyrics';
 import Icons from 'Images/vibe.svg';
 
@@ -44,9 +46,28 @@ interface Progress {
 interface Volume {
   volume: number;
 }
+interface MusicList {
+  id: number;
+  music_id: number;
+  music_name: string;
+  track_number: number;
+  album_image: string;
+  album_name: string;
+  album_id: number;
+  lyrics: any;
+  stream_url: any;
+  artist_name: Array<string>;
+  artist_id: Array<number>;
+}
+interface Props {
+  children?: React.ReactNode;
+  songList: Array<MusicList>;
+  setNewList: any;
+}
 
-const Player: React.FC = (props) => {
+const Player: React.FC<Props> = (props) => {
   const [state, setState] = useState<ItemType[]>([]);
+  const { songList, setNewList } = props;
   const [toggle, setToggle] = useState<boolean>(false);
   const [like, setLike] = useState<boolean>(false);
   const [lyricsModal, setLyricsModal] = useState<boolean>(false);
@@ -97,10 +118,10 @@ const Player: React.FC = (props) => {
   const playNext = () => {
     if (shuffle) {
       setHistory(newArr);
-      setCurrentIndex(Math.floor(Math.random() * state.length));
+      setCurrentIndex(Math.floor(Math.random() * songList.length));
       startPlayer();
     } else {
-      if (currentIndex === state.length - 1) {
+      if (currentIndex === songList.length - 1) {
         prevPlayer.pause();
         setIsplaying(false);
       } else {
@@ -202,11 +223,6 @@ const Player: React.FC = (props) => {
     setToggle(!toggle);
   };
 
-  // const findItem = id => {
-  //   state.find((item)=> item.id === id)
-
-  //   }
-
   const handlePlay = (props: any) => {
     const idx = state.findIndex((item, idx) => item.music_id === props.id);
     if (player.paused) {
@@ -220,10 +236,6 @@ const Player: React.FC = (props) => {
       setIsplaying(false);
       setCurrentIndex(idx);
     }
-  };
-
-  const handleRemove = (id: number) => {
-    setState(state.filter((item) => item.music_id !== id));
   };
 
   const handleLyrics = () => {
@@ -328,17 +340,17 @@ const Player: React.FC = (props) => {
               <ReactSortable
                 ghostClass={'ghost-class'}
                 animation={200}
-                list={state}
-                setList={setState}
+                list={songList}
+                setList={(newList: object[]) => setNewList(newList)}
               >
-                {state.map((item) => (
+                {songList.map((item: MusicList) => (
                   <MusicItems
                     key={item.music_id}
                     id={item.music_id}
                     music_name={item.music_name}
                     album_image={item.album_image}
                     artist_name={item.artist_name}
-                    onRemove={(id: number) => handleRemove(id)}
+                    onRemove={(id: number) => removeMusic(id)}
                     handlePlay={(props: any) => handlePlay(props)}
                     isplaying={isplaying}
                   />
@@ -361,7 +373,13 @@ const Player: React.FC = (props) => {
   );
 };
 
-export default Player;
+const mapStateToProps = (state: any) => {
+  return {
+    songList: state.songList,
+  };
+};
+
+export default connect(mapStateToProps, { setNewList, removeMusic })(Player);
 
 const pseudoAfter = css`
   content: '';
