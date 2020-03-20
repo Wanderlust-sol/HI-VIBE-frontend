@@ -4,8 +4,9 @@ import { PlayButton, PauseButton } from '../Buttons/PlayButton';
 import MoreButton from '../Buttons/MoreButton';
 
 interface Data {
-  news_content_img: string;
-  news_content_tag: string;
+  thumbnail: string;
+  main_text: string;
+  news_id: number;
 }
 
 interface Props {
@@ -37,11 +38,15 @@ export default class NewsContent extends Component<Props> {
               position: 'relative',
               overflow: 'hidden',
               marginTop: -95,
+              height: '310px',
             }}
           >
             <Overlay
               style={{
-                backgroundImage: `url(${this.props.data.news_content_img})`,
+                width: `600px`,
+                transform: `translate(-21%, -10%)`,
+                overflow: `hidden`,
+                backgroundImage: `url(${this.props.data.thumbnail})`,
               }}
               blur={this.state.isHovering}
             />
@@ -56,11 +61,12 @@ export default class NewsContent extends Component<Props> {
                 style={{ opacity: this.state.isHovering ? 1 : 0 }}
               />
             )}
-            <MoreButton style={{ opacity: this.state.isHovering ? 1 : 0 }} />
+            <MoreButton
+              id={this.props.data.news_id}
+              style={{ opacity: this.state.isHovering ? 1 : 0 }}
+            />
           </div>
-          <Title style={{ marginTop: 15 }}>
-            {this.props.data.news_content_tag}
-          </Title>
+          <Title style={{ marginTop: 15 }}>{this.props.data.main_text}</Title>
           <SubText>관련 뉴스 보기</SubText>
         </div>
       </>

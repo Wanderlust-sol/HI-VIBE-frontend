@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import Layout from 'Components/Layout/Layout';
 import Headline from 'Components/TodayFolder/Headline';
 import Banner from 'Components/TodayFolder/Banner';
@@ -8,7 +9,7 @@ import Magazine2 from 'Components/TodayFolder/Magazine2';
 import News from 'Components/TodayFolder/News';
 import Download from 'Components/TodayFolder/Download';
 import Intro from 'Components/TodayFolder/Intro';
-import styled from 'styled-components';
+import Footer from 'Components/Footer/Footer';
 
 export default class Today extends Component {
   render(): JSX.Element {
@@ -28,9 +29,9 @@ export default class Today extends Component {
             </SectionWrapper>
             <Download />
           </div>
-
           <Intro />
         </Container>
+        <Footer />
       </Layout>
     );
   }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { withRouter } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ip } from 'config';
 import styled, { css } from 'styled-components';
 // import Login from 'Utils/Login';
@@ -22,8 +22,17 @@ interface Image {
   url: string;
 }
 
-const Nav: React.FC = () => {
+interface Menu {
+  menu: number | boolean;
+}
+
+const Nav: React.FC<RouteComponentProps> = ({
+  history,
+}: RouteComponentProps) => {
   const [data, setData] = useState<User>({ nickname: '', image: '' });
+  const [menu, setMenu] = useState<number>(1);
+  const [profile, setProfile] = useState<boolean>(false);
+
   useEffect(CDM, []);
 
   function CDM() {
@@ -99,15 +108,36 @@ const Nav: React.FC = () => {
         });
     }
   }
+
+  const handleProfile = () => {
+    setProfile(!profile);
+  };
+
+  const handleLogout = () => {
+    window.localStorage.clear();
+    history.push('/');
+    window.location.reload();
+  };
+
+  const todayClick = () => {
+    history.push('/');
+    setMenu(1);
+  };
+
+  const djClick = () => {
+    history.push('/dj_station');
+    setMenu(2);
+  };
+
   return (
     <MainNav>
-      <LogoLink href="/" />
+      <LogoLink onClick={todayClick} />
       <SearchLink href="#" />
       <MyMenu>
         <ProfileArea>
           {data.image ? (
             <LoggedLink url={data.image}>
-              <LoginText>{data.nickname}</LoginText>
+              <LoginText onClick={handleProfile}>{data.nickname}</LoginText>
             </LoggedLink>
           ) : (
             <LoginLink href="#">
@@ -115,12 +145,20 @@ const Nav: React.FC = () => {
               <NaverLogin id="naverIdLogin"></NaverLogin>
             </LoginLink>
           )}
+          {profile && (
+            <ProfilePopup>
+              <MyMerbership>My 멤버십</MyMerbership>
+              <Notice>공지사항</Notice>
+              <Account>계정설정</Account>
+              <Logout onClick={handleLogout}>로그아웃</Logout>
+            </ProfilePopup>
+          )}
         </ProfileArea>
         <MenuArea>
           <Ul>
-            <List marginTop="0">
-              <TodayLink href="/">
-                <TodayText>투데이</TodayText>
+            <List marginTop="0" onClick={todayClick}>
+              <TodayLink menu={menu === 1}>
+                <TodayText menu={menu === 1}>투데이</TodayText>
               </TodayLink>
             </List>
             <List>
@@ -128,9 +166,9 @@ const Nav: React.FC = () => {
                 <DefaultText>차트</DefaultText>
               </ChartLink>
             </List>
-            <List>
-              <DjLink href="/dj_station">
-                <DefaultText>DJ 스테이션</DefaultText>
+            <List onClick={djClick}>
+              <DjLink menu={menu === 2}>
+                <DjText menu={menu === 2}> DJ 스테이션</DjText>
               </DjLink>
             </List>
             <List>
@@ -279,6 +317,80 @@ const ProfileArea = styled.div`
   `}
 `;
 
+const ProfilePopup = styled.div`
+  top: 39px;
+  right: 20px;
+  width: 150px;
+  background-color: #fff;
+  position: absolute;
+  z-index: 15;
+  padding: 11px 0;
+  white-space: nowrap;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+`;
+
+const MyMerbership = styled.div`
+  color: #232323;
+  display: block;
+  width: 100%;
+  padding: 6px 20px 7px;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: left;
+  white-space: nowrap;
+  box-sizing: border-box;
+  &:hover {
+    background-color: #f3f3f3;
+  }
+`;
+
+const Notice = styled.div`
+  color: #232323;
+  display: block;
+  width: 100%;
+  padding: 6px 20px 7px;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: left;
+  white-space: nowrap;
+  box-sizing: border-box;
+  &:hover {
+    background-color: #f3f3f3;
+  }
+`;
+
+const Account = styled.div`
+  color: #232323;
+  display: block;
+  width: 100%;
+  padding: 6px 20px 7px;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: left;
+  white-space: nowrap;
+  box-sizing: border-box;
+  &:hover {
+    background-color: #f3f3f3;
+  }
+`;
+
+const Logout = styled.div`
+  color: #232323;
+  display: block;
+  width: 100%;
+  padding: 6px 20px 7px;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: left;
+  white-space: nowrap;
+  box-sizing: border-box;
+  &:hover {
+    background-color: #f3f3f3;
+  }
+`;
+
 const MenuArea = styled.div`
   margin-top: 34px;
 `;
@@ -379,13 +491,14 @@ const TodayLink = styled.a`
   ${defaultLink}
   opacity: 1;
   ::before {
-    background-position: -499px -747px;
+    background-position: ${(props: Menu) =>
+      props.menu ? '-499px -747px' : '-527px -747px'};
   }
 `;
 
 const TodayText = styled.span`
   ${defaultText}
-  color: rgb(255, 0, 80);
+  color: ${(props: Menu) => props.menu && 'rgb(255, 0, 80)'};
   opacity: 1;
 `;
 
@@ -401,8 +514,15 @@ const DefaultText = styled.span`
 
 const DjLink = styled.a`
   ${defaultLink} ::before {
-    background-position: -528px -719px;
+    background-position: ${(props: Menu) =>
+      props.menu ? '-164px -719px' : '-528px -719px'};
   }
+`;
+
+const DjText = styled.span`
+  ${defaultText}
+  color: ${(props: Menu) => props.menu && 'rgb(255, 0, 80)'};
+  opacity: 1;
 `;
 
 const MagLink = styled.a`

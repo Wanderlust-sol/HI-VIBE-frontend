@@ -1,14 +1,18 @@
-import Icons from '../../Images/vibe.svg';
-import styled from 'styled-components';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { addMusic } from 'Redux_aeri/Actions';
+import styled from 'styled-components';
+import Icons from 'Images/vibe.svg';
 
 interface Props {
   style: React.CSSProperties | undefined;
   ulStyle?: React.CSSProperties | undefined;
   initial?: React.ReactNode;
+  id: number;
+  addMusic: any;
 }
 
-export default class MoreButton extends Component<Props> {
+class MoreButton extends Component<Props> {
   state = {
     open: false,
     selected: this.props.initial || -1,
@@ -27,6 +31,14 @@ export default class MoreButton extends Component<Props> {
     });
   };
 
+  getMusic = (id: number) => {
+    fetch(`http://10.58.2.227:8000/music/recommendation_music/${id}`)
+      .then((res) => res.json())
+      .then((res) => {
+        this.props.addMusic(res.music_list);
+      });
+  };
+
   render(): JSX.Element {
     return (
       <>
@@ -38,7 +50,9 @@ export default class MoreButton extends Component<Props> {
           {this.state.active && (
             <Ul style={this.props.ulStyle}>
               <List>보관함에 추가</List>
-              <List>내 플레이리스트 추가</List>
+              <List onClick={() => this.getMusic(this.props.id)}>
+                내 플레이리스트 추가
+              </List>
               <List>바로 다음에 추가</List>
               <List>맨 아래에 추가</List>
               <List>공유</List>
@@ -49,6 +63,8 @@ export default class MoreButton extends Component<Props> {
     );
   }
 }
+
+export default connect(null, { addMusic })(MoreButton);
 
 const Button = styled.a`
   position: absolute;
