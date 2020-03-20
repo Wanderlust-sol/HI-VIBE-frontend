@@ -181,13 +181,18 @@ export default class Footer extends Component<{}, State> {
   }
 }
 const FooterBoxParent = styled.div`
+  margin-bottom: 81px;
+  padding-bottom: 35px;
+
+  ${({ theme }) => theme.media.desktop`
   position: absolute;
   width: 100%-225px;
-  bottom: 81px;
+  bottom: 0;
   right: 0;
   left: 225px;
   height: 164px;
   background-color: #f2f2f2;
+  `};
 `;
 const FooterBox = styled.div`
   position: relative;
@@ -195,15 +200,29 @@ const FooterBox = styled.div`
   height: 100%;
 `;
 const NoticeFooter = styled.div`
+  height: 51px;
+  padding: 0 20px 0 15px;
+  border: 1px solid rgba(30, 30, 30, 0.05);
+  border-width: 1px 0;
+  display: block;
+  ${({ theme }) => theme.media.desktop`
   height: 52px;
-  /* padding: 0 870px 0 15px; */
   border: 1px solid rgba(30, 30, 30, 0.05);
   border-width: 1px 0;
   display: block;
   content: '';
   clear: both;
+
+  `}
 `;
 const LinkNotice = styled.a`
+  padding: 18px 5px 17px;
+  font-size: 14px;
+  float: left;
+  margin-right: 5px;
+  line-height: 16px;
+  color: #939393;
+  ${({ theme }) => theme.media.desktop`
   float: left;
   margin: 0 14px;
   padding: 18px 5px 19px;
@@ -212,6 +231,8 @@ const LinkNotice = styled.a`
   color: #939393;
   text-decoration: none;
   cursor: pointer;
+
+  `}
 `;
 const NoticeTitle = styled.div`
   overflow: hidden;
@@ -234,7 +255,12 @@ const NoticeLi1 = styled.li`
 const NoticeLi2 = styled.li``;
 const NoticeLi3 = styled.li``;
 const InfoFooter = styled.div`
+  padding: 23px 20px 15px;
+  border-bottom: 1px solid rgba(30, 30, 30, 0.05);
+  ${({ theme }) => theme.media.desktop`
   padding: 21px 21px 17px;
+
+  `}
 `;
 const Representative = styled.span`
   margin-left: -2px;
@@ -320,10 +346,12 @@ const Email = styled.span`
   font-size: 13px;
 `;
 const TermsFooter = styled.div`
-  position: absolute;
+  ${({ theme }) => theme.media.desktop`
+ position: absolute;
   top: 0;
   right: 20px;
   text-align: right;
+  `}
 `;
 const Item1 = styled.a`
   display: inline-block;
@@ -383,9 +411,18 @@ const Item7 = styled.a`
 `;
 
 const SnsFooter = styled.div`
+  margin-top: 17px;
+  margin-bottom: 17px;
+  position: static;
+  text-align: center;
+  right: 19px;
+  bottom: 68px;
+
+  ${({ theme }) => theme.media.desktop`
   position: absolute;
   right: 19px;
-  bottom: 58px;
+  bottom: 30px;
+  `}
 `;
 const FaceBookLink = styled.a`
   display: inline-block;

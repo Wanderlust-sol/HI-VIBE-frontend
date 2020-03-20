@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { ip } from 'config';
 
 interface Props {
   id: number;
@@ -29,11 +30,9 @@ class ThemeListComponent extends React.Component<Props, State> {
   }
 
   ListFetch = () => {
-    // const themeId = this.props.location.search.split('=')[1];
-    fetch(`http://10.58.2.227:8000/music/station/theme`, {
+    fetch(`${ip}music/station/theme`, {
       method: 'GET',
     })
-      // fetch('http://10.58.2.227:8000/music/station/20')
       .then((res) => res.json())
       .then((res) => {
         this.setState({

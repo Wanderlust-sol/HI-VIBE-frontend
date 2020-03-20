@@ -94,7 +94,7 @@ const Nav: React.FC = () => {
       })
         .then((res) => res.json())
         .then((res) => {
-          localStorage.setItem('wtw-token', res.token);
+          localStorage.setItem('wtw_token', res.token);
           setData(res.user);
         });
     }
@@ -144,7 +144,21 @@ const Nav: React.FC = () => {
               </MonthlyLink>
             </List>
           </Ul>
-
+          {window.localStorage.wtw_token ? (
+            <LoginMenuWrapper>
+              <StorageBox>보관함</StorageBox>
+              <StorageBoxListWrapper>
+                <StorageMixTape>믹스테잎</StorageMixTape>
+                <StorageSong>노래</StorageSong>
+                <StorageArtist>아티스트</StorageArtist>
+                <StorageAlbum>앨범</StorageAlbum>
+                <StoragePlayList>플레이리스트</StoragePlayList>
+                <StorageGetSong>받은노래</StorageGetSong>
+              </StorageBoxListWrapper>
+            </LoginMenuWrapper>
+          ) : (
+            <></>
+          )}
           <ExtraMenu>
             <ExtraLink1
               href="https://vibe.naver.com/wheresmymoney"
@@ -407,6 +421,7 @@ const ExtraMenu = styled.div`
   margin-top: 34px;
   padding-top: 24px;
   border-top: 1px solid hsla(0, 0%, 84.7%, 0.13);
+  height: 300px;
 `;
 
 const extraLink = css`
@@ -457,4 +472,95 @@ const ExtraText = styled.a`
   color: #fff;
   opacity: 0.8;
   text-decoration: none;
+`;
+// 로그인 시 생길 div
+const LoginMenuWrapper = styled.div`
+  /* margin-top: 34px; */
+  /* border-top: 1px solid hsla(0, 0%, 84.7%, 0.13); */
+`;
+const StorageBox = styled.span`
+  display: block;
+  margin: 32px 9px 0;
+  font-size: 13px;
+  line-height: 16px;
+  color: #555;
+`;
+const StorageBoxListWrapper = styled.div`
+  margin: 0;
+  padding: 0;
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+`;
+const StorageMixTape = styled.a`
+  display: block;
+  padding: 6px 9px;
+  margin-top: 6px;
+  font-size: 16px;
+  line-height: 19px;
+  color: #fff;
+  opacity: 0.8;
+  :hover {
+    opacity: 1;
+  }
+`;
+const StorageSong = styled.a`
+  display: block;
+  padding: 6px 9px;
+  margin-top: 6px;
+  font-size: 16px;
+  line-height: 19px;
+  color: #fff;
+  opacity: 0.8;
+  :hover {
+    opacity: 1;
+  }
+`;
+const StorageArtist = styled.li`
+  display: block;
+  padding: 6px 9px;
+  margin-top: 6px;
+
+  font-size: 16px;
+  line-height: 19px;
+  color: #fff;
+  opacity: 0.8;
+  :hover {
+    opacity: 1;
+  }
+`;
+const StorageAlbum = styled.li`
+  display: block;
+  padding: 6px 9px;
+  margin-top: 6px;
+  font-size: 16px;
+  line-height: 19px;
+  color: #fff;
+  opacity: 0.8;
+  :hover {
+    opacity: 1;
+  }
+`;
+const StoragePlayList = styled.a`
+  display: block;
+  padding: 6px 9px;
+  margin-top: 6px;
+  font-size: 16px;
+  line-height: 19px;
+  color: #fff;
+  opacity: 0.8;
+  :hover {
+    opacity: 1;
+  }
+`;
+const StorageGetSong = styled.a`
+  display: block;
+  padding: 6px 9px;
+  margin-top: 6px;
+  font-size: 16px;
+  line-height: 19px;
+  color: #fff;
+  opacity: 0.8;
+  :hover {
+    opacity: 1;
+  }
 `;

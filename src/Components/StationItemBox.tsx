@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { addMusic } from 'Redux_aeri/Actions';
 import { PlayButton, PauseButton } from 'Components/Buttons/PlayButton';
+import { ip } from 'config';
 
 interface Props {
   imgUrl: string;
@@ -33,7 +34,7 @@ export class StationItemBox extends Component<Props, State> {
   };
 
   getMusic = (id: number) => {
-    fetch(`http://10.58.2.227:8000/music/station_music/${id}`, {
+    fetch(`${ip}music/station_music/${id}`, {
       method: 'GET',
     })
       .then((res) => res.json())

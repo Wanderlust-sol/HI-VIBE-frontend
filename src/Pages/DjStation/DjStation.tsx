@@ -5,7 +5,7 @@ import Footer from 'Components/Footer/Footer';
 // import StationComponent from 'Components/StationComponent';
 import StationItemBox from 'Components/StationItemBox';
 import ThemeListComponent from 'Components/ThemeListComponent';
-
+import { ip } from 'config';
 import styled from 'styled-components';
 
 interface Props {
@@ -74,13 +74,9 @@ class DjStation extends Component<Props, IState> {
   }
   // 첫 번째 fetch
   getFirstPage = () => {
-    // fetch('http://localhost:3000/data/djStationData.json')
-    fetch(
-      `http://10.58.2.227:8000/music/station/theme/${this.state.theme_id}`,
-      {
-        method: 'GET',
-      },
-    )
+    fetch(`${ip}music/station/theme/${this.state.theme_id}`, {
+      method: 'GET',
+    })
       .then((res) => res.json())
       .then((res) => {
         this.setState(
@@ -95,7 +91,7 @@ class DjStation extends Component<Props, IState> {
   };
 
   getModalFetch = () => {
-    fetch('http://10.58.2.227:8000/music/station/theme', {
+    fetch(`${ip}music/station/theme`, {
       method: 'GET',
     })
       .then((res) => res.json())
@@ -106,8 +102,7 @@ class DjStation extends Component<Props, IState> {
       });
   };
   genreStationFetch = () => {
-    // fetch('http://localhost:3000/data/genreData.json')
-    fetch(`http://10.58.2.227:8000/music/station/theme/30`, {
+    fetch(`${ip}music/station/theme/30`, {
       method: 'GET',
     })
       .then((res) => res.json())
@@ -118,7 +113,7 @@ class DjStation extends Component<Props, IState> {
       });
   };
   stationMusicFetch = () => {
-    fetch('http://10.58.2.227:8000/music/station_music/2', {
+    fetch(`${ip}music/station_music/2`, {
       method: 'GET',
     })
       .then((res) => res.json())
@@ -249,7 +244,7 @@ const MainContent = styled.div`
   margin: 0 auto;
   ${({ theme }) => theme.media.desktop`
   position: relative;
-    max-width: 964px;
+    max-width: 1020px;
     margin: 0 auto;
 
   `}
@@ -269,16 +264,10 @@ const ThemeBox = styled.button`
 
 const MainText = styled.div`
   position: relative;
-  margin: 61px 0 25px;
+  margin: 61px 0 25px 36px;
+  max-width: 1020px;
   font-size: 30px;
   line-height: 36px;
-  /* color: #232323;
-  width: 80%; */
-  /* font-size: 0.67em; */
-  margin-block-start: 0.83em;
-  margin-block-end: 0.83em;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
   font-weight: bold;
 `;
 const ThemeIconBox = styled.img`
@@ -398,7 +387,9 @@ const ModalBody = styled.div`
   overflow: auto;
   padding: 0 50 px 0 50px;
 `;
-const ModalContent = styled.ul``;
+const ModalContent = styled.ul`
+  margin-left: 40px;
+`;
 const ModalTitle = styled.div`
   display: block;
   font-size: 17px;
