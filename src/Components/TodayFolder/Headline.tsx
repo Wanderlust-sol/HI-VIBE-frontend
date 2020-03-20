@@ -43,6 +43,7 @@ class Headline extends Component {
                   />
                 )}
                 <MoreButton
+                  id={1}
                   style={{ opacity: this.state.isHovering ? 1 : 0 }}
                   ulStyle={{ bottom: 'unset', top: 40 }}
                 />

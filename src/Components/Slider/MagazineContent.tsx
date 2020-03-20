@@ -4,9 +4,10 @@ import { PlayButton, PauseButton } from '../Buttons/PlayButton';
 import MoreButton from '../Buttons/MoreButton';
 
 interface Data {
-  magazine_content_img: string;
-  magazine_content_tag: string;
-  magazine_content_date: string;
+  thumbnail: string;
+  title: string;
+  release_date: string;
+  magazine_id: number;
 }
 
 interface Props {
@@ -38,7 +39,7 @@ export default class MagazineContent extends Component<Props> {
           >
             <Overlay
               style={{
-                backgroundImage: `url(${this.props.data.magazine_content_img})`,
+                backgroundImage: `url(${this.props.data.thumbnail})`,
               }}
               blur={this.state.isHovering}
             />
@@ -53,12 +54,17 @@ export default class MagazineContent extends Component<Props> {
                 style={{ opacity: this.state.isHovering ? 1 : 0 }}
               />
             )}
-            <MoreButton style={{ opacity: this.state.isHovering ? 1 : 0 }} />
+            <MoreButton
+              id={this.props.data.magazine_id}
+              style={{ opacity: this.state.isHovering ? 1 : 0 }}
+            />
           </div>
           <Title style={{ marginTop: 15 }}>
-            {this.props.data.magazine_content_tag}
+            {this.props.data.title.split('\\n').map((line) => {
+              return <p>{line}</p>;
+            })}
           </Title>
-          <SubText>{this.props.data.magazine_content_date}</SubText>
+          <SubText>{this.props.data.release_date}</SubText>
         </div>
       </>
     );

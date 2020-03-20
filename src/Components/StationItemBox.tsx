@@ -39,7 +39,6 @@ export class StationItemBox extends Component<Props, State> {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res.music_list);
         this.props.addMusic(res.music_list);
       });
   };

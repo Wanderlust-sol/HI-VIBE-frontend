@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import { ip } from 'config';
+import styled from 'styled-components';
 import Slider from 'react-slick';
 import MagazineContent from '../Slider/MagazineContent2';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
 import ArrowNext from '../Buttons/Arrow/Next';
 import ArrowPrev from '../Buttons/Arrow/Prev';
-import styled from 'styled-components';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 export default class Magazine2 extends Component {
   state = {
@@ -13,11 +14,11 @@ export default class Magazine2 extends Component {
   };
 
   componentDidMount = (): void => {
-    fetch('http://localhost:3000/data/magazineContent2.json')
+    fetch(`${ip}music/recommendation`)
       .then((res) => res.json())
       .then((res) => {
         this.setState({
-          sliderContent: res.magazine_content,
+          sliderContent: res.recommendation_list,
         });
       });
   };
@@ -33,9 +34,11 @@ export default class Magazine2 extends Component {
       prevArrow: <ArrowPrev />,
     };
 
-    const content = this.state.sliderContent.map((obj, i) => {
-      return <MagazineContent data={obj} key={i} />;
-    });
+    const content =
+      this.state.sliderContent !== undefined &&
+      this.state.sliderContent.map((obj, i) => {
+        return <MagazineContent data={obj} key={i} />;
+      });
 
     return (
       <Container>

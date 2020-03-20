@@ -44,8 +44,8 @@ interface MusicList {
   album_image: string;
   album_name: string;
   album_id: number;
-  lyrics: any;
-  stream_url: any;
+  lyrics: string;
+  stream_url: string;
   artist_name: Array<string>;
   artist_id: Array<number>;
 }

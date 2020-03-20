@@ -1,19 +1,23 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
+import { addMusic } from 'Redux_aeri/Actions';
 import { PlayButton, PauseButton } from '../Buttons/PlayButton';
 import MoreButton from '../Buttons/MoreButton';
 
 interface Data {
-  magazine_content_img: string;
-  magazine_content_tag: string;
-  magazine_content_sort: string;
+  main_image: string;
+  title: string;
+  sub_title: string;
+  recommendation_id: number;
 }
 
 interface Props {
   data: Data;
+  addMusic: any;
 }
 
-export default class MagazineContent2 extends Component<Props> {
+class MagazineContent2 extends Component<Props> {
   state = {
     isHovering: false,
     isPlay: false,
@@ -23,8 +27,16 @@ export default class MagazineContent2 extends Component<Props> {
     this.setState({ isHovering: !this.state.isHovering });
   };
 
-  togglePlay = (): void => {
-    this.setState({ isPlay: !this.state.isPlay });
+  togglePlay = (id: number): void => {
+    this.setState({ isPlay: !this.state.isPlay }, () => {
+      if (this.state.isPlay) {
+        fetch(`http://10.58.2.227:8000/music/recommendation_music/${id}`)
+          .then((res) => res.json())
+          .then((res) => {
+            this.props.addMusic(res.music_list);
+          });
+      }
+    });
   };
 
   render(): JSX.Element {
@@ -38,32 +50,39 @@ export default class MagazineContent2 extends Component<Props> {
           >
             <Overlay
               style={{
-                backgroundImage: `url(${this.props.data.magazine_content_img})`,
+                backgroundImage: `url(${this.props.data.main_image})`,
               }}
               blur={this.state.isHovering}
             />
             {this.state.isPlay ? (
               <PauseButton
-                onClick={this.togglePlay}
+                onClick={() =>
+                  this.togglePlay(this.props.data.recommendation_id)
+                }
                 style={{ opacity: this.state.isHovering ? 1 : 0 }}
               />
             ) : (
               <PlayButton
-                onClick={this.togglePlay}
+                onClick={() =>
+                  this.togglePlay(this.props.data.recommendation_id)
+                }
                 style={{ opacity: this.state.isHovering ? 1 : 0 }}
               />
             )}
-            <MoreButton style={{ opacity: this.state.isHovering ? 1 : 0 }} />
+            <MoreButton
+              id={this.props.data.recommendation_id}
+              style={{ opacity: this.state.isHovering ? 1 : 0 }}
+            />
           </div>
-          <Title style={{ marginTop: 15 }}>
-            {this.props.data.magazine_content_tag}
-          </Title>
-          <SubText>{this.props.data.magazine_content_sort}</SubText>
+          <Title style={{ marginTop: 15 }}>{this.props.data.title}</Title>
+          <SubText>{this.props.data.sub_title}</SubText>
         </div>
       </>
     );
   }
 }
+
+export default connect(null, { addMusic })(MagazineContent2);
 
 interface Filter {
   blur?: boolean;
