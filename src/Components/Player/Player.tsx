@@ -119,7 +119,6 @@ const Player: React.FC<Props> = (props) => {
         setHistory(newArr);
         setCurrentIndex(currentIndex + 1);
         startPlayer();
-        // prevPlayer.play();
       }
     }
   };
@@ -215,11 +214,7 @@ const Player: React.FC<Props> = (props) => {
   const handlePlay = (props: any) => {
     const idx = songList.findIndex((item, idx) => item.music_id === props.id);
     if (player.paused) {
-      // console.log('props', props);
-      // console.log('state', state);
-      // console.log('idx', idx);
       setCurrentIndex(idx);
-      // setIsplaying(true);
     } else {
       player.pause();
       setIsplaying(false);
@@ -234,18 +229,6 @@ const Player: React.FC<Props> = (props) => {
   const LyricsClose = () => {
     setLyricsModal(false);
   };
-  // const getSongs = async () => {
-  //   await fetch(`${ip}music/station_music/2`)
-  //     .then((res) => res.json())
-  //     .then((res) => {
-  //       // let data = [...state, res.music_list];
-  //       setState(res.music_list);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   getSongs();
-  // }, []);
 
   useEffect(() => {
     // getSongs();
