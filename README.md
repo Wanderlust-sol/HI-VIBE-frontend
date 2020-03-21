@@ -1,44 +1,54 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### Project
+-------------
++ 코딩 1개월 2주차 WeCode 6기 수강생의 [VIBE](https://vibe.naver.com/) 클론 프로젝트
 
-## Available Scripts
+### 개발 인원 및 기간
+-----------
+개발기간 : 2020/3/9 ~ 2020/3/20
+개발 인원 : Front-End 3명, Back-End 2명, react-native 1명
+[Back-End github](https://github.com/wecode-bootcamp-korea/HI-ViBE-backend)
+[Native github](https://github.com/wecode-bootcamp-korea/HI-ViBE-app)
 
-In the project directory, you can run:
+### 목적
+------------
++ 실제 Back-End API를 통해 원하는 데이터를 GET하여 음악 스트리밍 서비스 구현하기
++ 라이브러리 없이 음악 재생 구현해보기
++ TypeScript와 Redux를 사용하여 음악 재생 바 관련 state관리 구현해보기
 
-### `yarn start`
+### 데모 영상(이미지 클릭)
+-----------------
+[![HI-VIBE 미리보기](https://vimeo.com/399385820)
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### 적용 기술
+---------------
+Front-End : React.js, TypeScript, Styled Component, Redux
+Back-End : Python, Django
+Common : NAVER social login
 
-### `yarn test`
+### 구현 기능
+---------
+#### COMMON
++ 768px 기준으로 반응형 구현
++ nav에서 DJ-station 더블 클릭 시 페이지 이동
++ footer 공지사항 라이브러리 없이 자동으로 넘어가는 것 구현
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+#### NAVER 로그인
++ 로그인 시 nav바에 사용자만의 보관함 나타남
 
-### `yarn build`
+#### Today
++ slick을 사용하여 앨범이나 음악 테마, 뉴스 등 나타내기
++ hover 했을 때 재생버튼 나타나고 재생버튼을 클릭하거나 ...에 있는 '플레이리스트에 추가' 누르면 재생 목록에 추가 구현
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### DJ-STATION
++ 테마 바꿔끼기 구현
++ '힙 터질 때', '멍 때릴 때' 등 테마 클릭 시 해당하는 음악이 재생 목록에 추가
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+#### 음악 재생 바
++ 재생 목록 drag & drop 구현
++ shuffle 기능 구현
++ 각 노래에 맞는 가사 넣기
++ 음량 조절 기능 구현
++ 재생 목록에서 삭제 가능
++ 재생 바 클릭하면 클릭한 노래 시간으로 변경
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
